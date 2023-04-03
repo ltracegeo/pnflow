@@ -22,11 +22,8 @@ srcs = \
 	psPrc/netStatistics.cpp Element.cpp  \
 	ElementThroat.cpp    pnflow.cpp \
 	inputData.cpp     FlowDomain.cpp  FlowDomain_drain.cpp   \
-	FlowDomain_imbibe.cpp   NetworkTransform.cpp   hypreSolver.cpp psPrc/vtuWriter.cpp
-
-
-
-
+	FlowDomain_imbibe.cpp   NetworkTransform.cpp   hypreSolver.cpp psPrc/vtuWriter.cpp \
+	Random.cpp
 
 USE_msTEST=1
 USE_HYPRESEQ=1

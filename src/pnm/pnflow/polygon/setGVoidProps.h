@@ -1,10 +1,14 @@
-
+#include <optional>
+#include <random>
 
 #include "readSetCAs.h"
+#include "Random.h"
 
+using pnflow::Random;
 
-
-void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const Weibul1& wb, int CAMdl, double CAMdl2SepAng, int nBpPors, const GNMData& comn)
+void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const Weibul1& wb,
+                      int CAMdl, double CAMdl2SepAng, int nBpPors, const GNMData& comn,
+					  const std::optional<Weibul1> &scndWbContAngDist = std::nullopt)
 {
 
  if(wb.cor.size()>4 && wb.cor[4] == 'A') //rMaxAll rMinAll
@@ -12,7 +16,18 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
 	const size_t nps= pores.size();
 	const size_t nes= pores.size()+trots.size();
 	vector<double> conAngles(nes);
-	for(size_t i= 0; i < nes; ++i)  conAngles[i]= comn.weibul1(wb);
+	std::uniform_int_distribution<int> uniform_distribution(0, 1);
+	for(size_t i= 0; i < nes; ++i) {
+        if (scndWbContAngDist) {
+            if (Random::Generate(uniform_distribution)) {
+                conAngles[i] = comn.weibul1(wb);
+            } else {
+                conAngles[i] = comn.weibul1(*scndWbContAngDist);
+            }
+        } else {
+            conAngles[i] = comn.weibul1(wb);
+        }
+    }
 	sort(conAngles.begin(), conAngles.end(), greater<double>());
 
 	vector<VoidElem*> elems(nes);
@@ -165,6 +180,13 @@ void applyInitWettability(const InputFile& inp, const vector<Elem*>& elemans, in
 	wbCA.scale(acos(-1.)/180.);
 	CAMdl2SepAng *= acos(-1.) / 180.;
 
+	std::optional<Weibul1> scndWbContAngDist;
+	if (inp.giv("DUAL_DIST_CONT_ANG", data, 0))
+	{
+		scndWbContAngDist = std::make_optional<Weibul1>();
+		data >> *scndWbContAngDist;
+	}
+
 	vector<VoidElem*> pores2Set;  pores2Set.reserve(nBpPors);
 	for(int i= 2; i < nBpPors; ++i)
 		if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel())) if(elem->exists(WTR))  pores2Set.push_back(elem);
@@ -172,7 +194,8 @@ void applyInitWettability(const InputFile& inp, const vector<Elem*>& elemans, in
 	for(size_t i= nBpPors; i < elemans.size(); ++i)
 		if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel())) if(elem->exists(WTR))  trots2Set.push_back(elem);
 
-	setContactAngles(pores2Set, trots2Set, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn);
+	setContactAngles(pores2Set, trots2Set, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn,
+                     scndWbContAngDist);
 	if (inp.giv("READ_INIT_CA", data,0)) readSetCAs(data, elemans, nBpPors, out_);
 }
 
