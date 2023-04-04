@@ -6,29 +6,35 @@
 
 using pnflow::Random;
 
+std::vector<double> GenerateContactAngles(const GNMData& comn, const Weibul1& wb_1,
+                                          const std::optional<Weibul1> &wb_2,
+                                          int number_of_samples) {
+  std::vector<double> con_angles(number_of_samples);
+  std::uniform_int_distribution<int> uniform_distribution(0, 1);
+  for(size_t i = 0; i < con_angles.size(); ++i) {
+    if (wb_2) {
+      if (Random::Generate(uniform_distribution)) {
+        con_angles[i] = comn.weibul1(wb_1);
+      } else {
+        con_angles[i] = comn.weibul1(*wb_2);
+      }
+    } else {
+      con_angles[i] = comn.weibul1(wb_1);
+    }
+  }
+  sort(con_angles.begin(), con_angles.end(), greater<double>());
+  return con_angles;
+}
+
 void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const Weibul1& wb,
                       int CAMdl, double CAMdl2SepAng, int nBpPors, const GNMData& comn,
 					  const std::optional<Weibul1> &scndWbContAngDist = std::nullopt)
 {
-
  if(wb.cor.size()>4 && wb.cor[4] == 'A') //rMaxAll rMinAll
  {
 	const size_t nps= pores.size();
 	const size_t nes= pores.size()+trots.size();
-	vector<double> conAngles(nes);
-	std::uniform_int_distribution<int> uniform_distribution(0, 1);
-	for(size_t i= 0; i < nes; ++i) {
-        if (scndWbContAngDist) {
-            if (Random::Generate(uniform_distribution)) {
-                conAngles[i] = comn.weibul1(wb);
-            } else {
-                conAngles[i] = comn.weibul1(*scndWbContAngDist);
-            }
-        } else {
-            conAngles[i] = comn.weibul1(wb);
-        }
-    }
-	sort(conAngles.begin(), conAngles.end(), greater<double>());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, nes);
 
 	vector<VoidElem*> elems(nes);
 	for(size_t i= 0; i<pores.size() ; ++i) elems[i]=pores[i];
@@ -52,10 +58,7 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
  else if(wb.cor.size()>4 && wb.cor[4] == 'E')//rMaxEach rMinEach
  {
   {
-	vector<double> conAngles(pores.size());
-	for(size_t i= 0; i<conAngles.size(); ++i)
-	  conAngles[i]= comn.weibul1(wb);
-	sort(conAngles.begin(), conAngles.end(), greater<double>());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, pores.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(pores.begin(), pores.end(), ElemRadCmpRed());
@@ -70,10 +73,7 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
   }
 
   {
-	vector<double> conAngles(trots.size());
-	for(size_t i= 0; i<conAngles.size(); ++i)
-	  conAngles[i]= comn.weibul1(wb);
-	sort(conAngles.begin(), conAngles.end(), greater<double>());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, trots.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(trots.begin(), trots.end(), ElemRadCmpRed());
@@ -87,10 +87,7 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
 		trots[i]->setContactAngle(conAngles[i], CAMdl, CAMdl2SepAng);
   }
  } else {
-	vector<double> conAngles(pores.size());
-	for(size_t i= 0; i<conAngles.size(); ++i)
-	  conAngles[i]= comn.weibul1(wb);
-	sort(conAngles.begin(), conAngles.end(), greater<double>());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, pores.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(pores.begin(), pores.end(), ElemRadCmpRed());
@@ -142,7 +139,6 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
  if(comn.input().informative) cout<<"Contact Angles ["<<int(wb.minV*180/PI)<<"-"<<int((wb.minV+wb.delV)*180/PI)<<"] set for "<<pores.size()<<" pores and "<<trots.size()<<" trots. Crl:"<<wb.cor<<endl;
 }
 
-
 #ifndef READSETCAS_H
 void readSetCAs(istringstream& data, const vector<Elem*>& elemans, int nBpPors, mstream& out_, const GNMData& comn)  { out_<<"\nreadSetCAs: Not supported "<<endl; }
 #endif
@@ -185,6 +181,8 @@ void applyInitWettability(const InputFile& inp, const vector<Elem*>& elemans, in
 	{
 		scndWbContAngDist = std::make_optional<Weibul1>();
 		data >> *scndWbContAngDist;
+		(*scndWbContAngDist).minV *= acos(-1.)/180.;
+		(*scndWbContAngDist).scale(acos(-1.)/180.);
 	}
 
 	vector<VoidElem*> pores2Set;  pores2Set.reserve(nBpPors);
