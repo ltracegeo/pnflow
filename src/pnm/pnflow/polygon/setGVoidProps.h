@@ -7,13 +7,13 @@
 using pnflow::Random;
 
 std::vector<double> GenerateContactAngles(const GNMData& comn, const Weibul1& wb_1,
-                                          const std::optional<Weibul1> &wb_2,
+                                          const std::optional<Weibul1> &wb_2, double fraction,
                                           int number_of_samples) {
   std::vector<double> con_angles(number_of_samples);
-  std::uniform_int_distribution<int> uniform_distribution(0, 1);
+  std::uniform_real_distribution<double> uniform_distribution(0.0, 1.0);
   for(size_t i = 0; i < con_angles.size(); ++i) {
     if (wb_2) {
-      if (Random::Generate(uniform_distribution)) {
+      if (Random::Generate(uniform_distribution) > fraction) {
         con_angles[i] = comn.weibul1(wb_1);
       } else {
         con_angles[i] = comn.weibul1(*wb_2);
@@ -28,13 +28,15 @@ std::vector<double> GenerateContactAngles(const GNMData& comn, const Weibul1& wb
 
 void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const Weibul1& wb,
                       int CAMdl, double CAMdl2SepAng, int nBpPors, const GNMData& comn,
-					  const std::optional<Weibul1> &scndWbContAngDist = std::nullopt)
+                      const std::optional<Weibul1> &scndWbContAngDist = std::nullopt,
+                      double scndDistFraction = 0.0)
 {
  if(wb.cor.size()>4 && wb.cor[4] == 'A') //rMaxAll rMinAll
  {
 	const size_t nps= pores.size();
 	const size_t nes= pores.size()+trots.size();
-	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, nes);
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, scndDistFraction,
+                                                     nes);
 
 	vector<VoidElem*> elems(nes);
 	for(size_t i= 0; i<pores.size() ; ++i) elems[i]=pores[i];
@@ -58,7 +60,8 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
  else if(wb.cor.size()>4 && wb.cor[4] == 'E')//rMaxEach rMinEach
  {
   {
-	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, pores.size());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, scndDistFraction,
+                                                     pores.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(pores.begin(), pores.end(), ElemRadCmpRed());
@@ -73,7 +76,8 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
   }
 
   {
-	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, trots.size());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, scndDistFraction,
+                                                     trots.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(trots.begin(), trots.end(), ElemRadCmpRed());
@@ -87,7 +91,8 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
 		trots[i]->setContactAngle(conAngles[i], CAMdl, CAMdl2SepAng);
   }
  } else {
-	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, pores.size());
+	vector<double> conAngles = GenerateContactAngles(comn, wb, scndWbContAngDist, scndDistFraction,
+                                                     pores.size());
 
 	if(wb.cor[2] == 'a' || wb.cor[2] == 'A')      // rMax
 	  sort(pores.begin(), pores.end(), ElemRadCmpRed());
@@ -177,10 +182,11 @@ void applyInitWettability(const InputFile& inp, const vector<Elem*>& elemans, in
 	CAMdl2SepAng *= acos(-1.) / 180.;
 
 	std::optional<Weibul1> scndWbContAngDist;
-	if (inp.giv("DUAL_DIST_CONT_ANG", data, 0))
+	double scndDistFraction = 0.0;
+	if (inp.giv("2ND_CON_ANG", data, 0))
 	{
 		scndWbContAngDist = std::make_optional<Weibul1>();
-		data >> *scndWbContAngDist;
+		data >> scndDistFraction >> *scndWbContAngDist;
 		(*scndWbContAngDist).minV *= acos(-1.)/180.;
 		(*scndWbContAngDist).scale(acos(-1.)/180.);
 	}
@@ -193,7 +199,7 @@ void applyInitWettability(const InputFile& inp, const vector<Elem*>& elemans, in
 		if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel())) if(elem->exists(WTR))  trots2Set.push_back(elem);
 
 	setContactAngles(pores2Set, trots2Set, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn,
-                     scndWbContAngDist);
+                     scndWbContAngDist, scndDistFraction);
 	if (inp.giv("READ_INIT_CA", data,0)) readSetCAs(data, elemans, nBpPors, out_);
 }
 
@@ -515,6 +521,7 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 
 void setElemProps(const InputFile& inp, const vector<Elem*>& elemans, size_t nBpPors, mstream& out_, const GNMData& comn)
 {
+	Random::Init(inp.getOr("RAND_SEED", (unsigned)time(nullptr)));
 	if (comn.dispCycle()==1)
 		applyInitWettability(inp, elemans, nBpPors, out_, comn);
 	else if (comn.dispCycle()==2)
