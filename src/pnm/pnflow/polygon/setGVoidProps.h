@@ -3,6 +3,7 @@
 
 #include "readSetCAs.h"
 #include "Random.h"
+#include "vector_to_file.h"
 
 using pnflow::Random;
 
@@ -10,17 +11,28 @@ std::vector<double> GenerateContactAngles(const GNMData& comn, const Weibul1& wb
                                           const std::optional<Weibul1> &wb_2, double fraction,
                                           int number_of_samples) {
   std::vector<double> con_angles(number_of_samples);
+  std::vector<double> con_angles_wb1;
+  std::vector<double> con_angles_wb2;
+  con_angles_wb1.reserve(number_of_samples);
+  con_angles_wb2.reserve(number_of_samples);
   std::uniform_real_distribution<double> uniform_distribution(0.0, 1.0);
   for(size_t i = 0; i < con_angles.size(); ++i) {
     if (wb_2) {
       if (Random::Generate(uniform_distribution) > fraction) {
         con_angles[i] = comn.weibul1(wb_1);
+        con_angles_wb1.push_back(con_angles[i]);
       } else {
         con_angles[i] = comn.weibul1(*wb_2);
+        con_angles_wb2.push_back(con_angles[i]);
       }
     } else {
       con_angles[i] = comn.weibul1(wb_1);
     }
+  }
+  if (wb_2) {
+	writeVectorToFile(con_angles, "con_angles_final.csv", "Contact angle");
+    writeVectorToFile(con_angles_wb1, "con_angles_wb1.csv", "Contact angle");
+    writeVectorToFile(con_angles_wb2, "con_angles_wb2.csv", "Contact angle");
   }
   sort(con_angles.begin(), con_angles.end(), greater<double>());
   return con_angles;
