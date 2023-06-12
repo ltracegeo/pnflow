@@ -14,10 +14,9 @@
 
 /// mkdir getcwd chdir, #if (__cplusplus >= 201703L) should be true
 #include <experimental/filesystem>
-namespace filesystem = std::experimental::filesystem;
-inline std::string getpwd() { return filesystem::current_path().string(); }
-inline int mkdirs(const std::string& dir) {std::error_code ec; filesystem::create_directories(dir, ec);	 return ec.value(); /*filesystem::permissions(dir, filesystem::perms::owner_all, filesystem::perm_options::add);*/}
-inline int chdir(const std::string& dir) {std::error_code ec;  filesystem::current_path(dir,ec); return ec.value(); }
+inline std::string getpwd() { return std::experimental::filesystem::current_path().string(); }
+inline int mkdirs(const std::string& dir) {std::error_code ec; std::experimental::filesystem::create_directories(dir, ec);	 return ec.value(); /*std::experimental::filesystem::permissions(dir, std::experimental::filesystem::perms::owner_all, std::experimental::filesystem::perm_options::add);*/}
+inline int chdir(const std::string& dir) {std::error_code ec;  std::experimental::filesystem::current_path(dir,ec); return ec.value(); }
 #define  _TRY_(_syscmnd_) std::string((_syscmnd_==0) ?  " succeed " : " failed ")
 
 //! Non-folding brackets for namespace '{' and '}', to be used in early stages of code development
