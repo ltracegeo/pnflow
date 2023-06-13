@@ -136,8 +136,8 @@ int main(int argc, char *argv[])  {
 
 #endif
 
-void pnflow(std::string file_content) {
-	std::istringstream file_content_stream(file_content);
+extern "C" void pnflow(const char *config) {
+	std::istringstream file_content_stream(config);
 	InputFile inFile(file_content_stream, "input_data", true);
 	inFile.setTitle();
 	pnflowQD(inFile);

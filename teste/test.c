@@ -1,9 +1,6 @@
-#include <iostream>
-#include <string>
-
 #include "pnflow.h"
 
-std::string FILECONTENT = R"(
+const char FILECONTENT[] = R"(
 TITLE  Output;  // base name for the output files
 
 writeStatistics true;
@@ -51,4 +48,5 @@ PORE_FILL_WGT: 0.0 0.5 1.0 2.0 5.0 10.0;
 
 int main() {
     pnflow(FILECONTENT);
+    return 0;
 }
