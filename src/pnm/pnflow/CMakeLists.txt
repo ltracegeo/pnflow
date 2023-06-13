@@ -5,7 +5,12 @@ list(REMOVE_ITEM SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/FlowData.cpp
 )
 
-add_executable(pnflow ${SRC_FILES})
+# add_executable(pnflow ${SRC_FILES})
+add_library(pnflow MODULE ${SRC_FILES})
+set_target_properties(pnflow PROPERTIES
+    SUFFIX ".lib"
+    PREFIX ""
+)
 
 add_dependencies(pnflow
     hypreSeq
