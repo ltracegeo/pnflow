@@ -130,10 +130,10 @@ private:
 
 	static const int                                        DUMMY_INDEX;
 
-	std::ifstream                                                poreConn_;
-	std::ifstream                                                poreProp_;
-	std::ifstream                                                throatConn_;
-	std::ifstream                                                throatProp_;
+	std::stringstream                                       poreConn_;
+	std::stringstream                                       poreProp_;
+	std::stringstream                                       throatConn_;
+	std::stringstream                                       throatProp_;
 
 	int                                                     connectionsRemoved_;
 	int                                                     origNumPores_;
