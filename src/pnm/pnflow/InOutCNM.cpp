@@ -53,7 +53,9 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 									  //vector<Elem*>& throatsToInlet, vector<Elem*>& throatsToOutlet,
 									  //const vector< pair< int, double> >& insidePoreHashs, vector< int >& insideThroatHashs, int neoNPors)  
 	{
-		cout<<"Reading throats"<<endl;
+		if (input_.informative) {
+			cout<<"Reading throats"<<endl;
+		}
 
 		int numLengthErrors(0);
 		for(int iT = 0; iT < nTrots_; ++iT)  {
@@ -121,7 +123,10 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 
 
 
-		{	cout<<"Reading pores\n";cout.flush();
+		{
+			if (input_.informative) {
+				cout<<"Reading pores\n";cout.flush();
+			}
 			/// The pore data is read from the node files. At this point the throats are already created and the pointers
 			/// can be set. The strucure of the node files are as follows:
 			/// *_node1.dat:
@@ -164,8 +169,9 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 					elemans_[neoIndex] = new Pore(comn_, neoIndex, nod, radius, vol, clayVolume, shapeFactor, inSlvrBox, inSlvrBox, initSolvPrs, adjTrots,0);
 				}
 			}
-			cout<<" "<<endl;
-
+			if (input_.informative) {
+				cout<<" "<<endl;
+			}
 		}
 
 		input.clearNetworkData(); //functions above create a lot of additional working data not needed anymore, lets clean them to free the memory

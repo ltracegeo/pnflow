@@ -10,8 +10,11 @@ Developed by (2015): Ali Q Raeini  email: a.q.raeini@imperial.ac.uk
 
 
 
+namespace psprc {
 
+void SetDebug(bool enable);
 
+}  // namespace psprc
 
 void printCornerAngStatistics(   const std::vector<Elem const *>&  rockLattices, int nBSs_, int nBpPors_);
 void printCornerNumStatistics(   const std::vector<Elem const *>&  rockLattices, int nBSs_, int nPores_);

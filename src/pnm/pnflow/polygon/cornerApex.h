@@ -25,7 +25,7 @@ public:
 	void finitCornerApex(double pc, double recAng, double advAng, double halfAng, double intTen, bool oilInj, bool overRideTrp);
 	void createFilm(double pc, double recAng, double advAng, double halfAng, double intTen, bool isOilInj);
 	inline void removeCorner();
-	void getCApexDistConAng(double& apxDist, double& conA, double pc, double halfA, double ten, bool trapOveride = false, bool accurat = false, bool debug = false) const;
+	void getCApexDistConAng(double& apxDist, double& conA, double pc, double halfA, double ten, bool trapOveride = false, bool accurat = false) const;
 	inline void markTrappingCorner(const std::pair< int, double >& trpInside, double pc, double conAngRec, double conAngAdv, double halfAng, double intfacTen, bool injOil);
 
 	void updatePcsForDisconnectedOilLayer(double pc, double conAngRec, double conAngAdv, double halfAng, double intfacTen);
@@ -39,6 +39,7 @@ public:
 	double pinnedApexDist() const {return initedApexDist_;}
 	double initOrMinApexDistHist() const {return initOrMinApexDistHist_;}
 
+	static void SetDebug(bool enable);
 
 private:
 
@@ -49,7 +50,7 @@ private:
 	double                          initOrMinApexDistHist_;
 
 	Apex*                     		outerLayerApex_;
-
+	static bool                     debug_;
 };
 
 

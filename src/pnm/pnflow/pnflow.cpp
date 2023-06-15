@@ -9,7 +9,8 @@
 #include "FlowDomain.h"
 #include "input/input_manager.h"
 #include "input/input_parser.h"
-
+#include "polygon/cornerApex.h"
+#include "psPrc/netStatistics.h"
 
 #ifndef __DATE__
  #define __DATE__  "2021"
@@ -143,6 +144,9 @@ extern "C" {
 
 void pnflow(const char *config, const char *link1, const char *link2, const char *node1,
             const char *node2) {
+	bool enable_debug = false;
+	psprc::SetDebug(enable_debug);
+	CornerApex::SetDebug(enable_debug);
 	InputParser input_parser(config);
 	std::string network_name = input_parser.GetNetworkName();
 	InputManager::WriteStream(network_name + "_link1.dat", link1);
@@ -150,7 +154,7 @@ void pnflow(const char *config, const char *link1, const char *link2, const char
 	InputManager::WriteStream(network_name + "_node1.dat", node1);
 	InputManager::WriteStream(network_name + "_node2.dat", node2);
 	std::istringstream file_content_stream(config);
-	InputFile inFile(file_content_stream, "input_data", true);
+	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
 	inFile.setTitle();
 	pnflowQD(inFile);
 	// return _upscaled.tsv

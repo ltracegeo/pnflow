@@ -24,7 +24,15 @@ Developed by (2015): Ali Q Raeini  email: a.q.raeini@imperial.ac.uk
 
 #include "../compareFuncs.h"
 
+namespace psprc {
 
+static bool DEBUG_ENABLED = true;
+
+void SetDebug(bool enable) {
+	DEBUG_ENABLED = enable;
+}
+
+}  // psprc
 
 
 
@@ -59,7 +67,7 @@ using namespace std;
 
 
 void printRadiusStatistics( const std::vector<Elem const*>&  elemans, int nBSs_, int nBpPors_)  {
-		cout<<"\n\n//           \t arithmetic \t volume-weighted\n";
+		if (psprc::DEBUG_ENABLED) cout<<"\n\n//           \t arithmetic \t volume-weighted\n";
 
 	{
 		vector< Elem const * > elms(elemans.begin()+nBSs_, elemans.begin()+nBpPors_);
@@ -76,7 +84,7 @@ void printRadiusStatistics( const std::vector<Elem const*>&  elemans, int nBSs_,
 		RadAvgPore=RadAvgPore/(nBpPors_-nBSs_);
 		VWRadAvgPore=VWRadAvgPore/sumFlowVolume;
 		//cout<<"nPores_:\t"<<nPores_<<endl;
-		cout<<"RadAvgPore:  \t "<<RadAvgPore<<" \t "<<VWRadAvgPore<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"RadAvgPore:  \t "<<RadAvgPore<<" \t "<<VWRadAvgPore<<endl;
 	}
 
 
@@ -98,7 +106,7 @@ void printRadiusStatistics( const std::vector<Elem const*>&  elemans, int nBSs_,
 		//cout<<"numThroats:\t"<<nTrots<<endl;
 		//cout<<"RadAvgThroat:\t"<<RadAvgThroat<<endl;
 		//cout<<"VWRadAvgThroat:\t"<<VWRadAvgThroat<<endl;
-		cout<<"RadAvgThroat:\t "<<RadAvgThroat<<"\t "<<VWRadAvgThroat<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"RadAvgThroat:\t "<<RadAvgThroat<<"\t "<<VWRadAvgThroat<<endl;
 	}
 
 
@@ -122,7 +130,7 @@ void printRadiusStatistics( const std::vector<Elem const*>&  elemans, int nBSs_,
 		//cout<<"numElems_:\t"<<numElems_<<endl;
 		//cout<<"RadAvgElem:\t"<<RadAvgElem<<endl;
 		//cout<<"VWRadAvgElem:\t"<<VWRadAvgElem<<endl;
-		cout<<"RadAvgElem:  \t "<<RadAvgElem<<"\t "<<VWRadAvgElem<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"RadAvgElem:  \t "<<RadAvgElem<<"\t "<<VWRadAvgElem<<endl;
 	}      
 }
 
@@ -136,7 +144,7 @@ void printDistanceMapStatistics( const std::vector<Elem const *>&  elemans, int 
 		///. max radius:
 		double maxRad = accumulate((double const & (*) (double const &, double const &))(std::max<double>), elemans, &Elem::RRR)+1e-15;
 		double dr = maxRad/nsteps*(1.+1e-14);
-		cout<<"dr: "<<dr<< "   maxRad: "<<maxRad<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"dr: "<<dr<< "   maxRad: "<<maxRad<<endl;
 
 		std::valarray<std::valarray<double> > distribG(std::valarray<double>(0., nsteps),2);
 		for (int i=0; i<nsteps; ++i)	distribG[0][i] = 0.+dr/2+i*dr;
@@ -178,9 +186,9 @@ void printDistanceMapStatistics( const std::vector<Elem const *>&  elemans, int 
 
 		}
 
-		cout<<"\n\n"<< "// cnm distance map distribution from G, "<<"maxRad "<<maxRad<<"dr "<<dr<<endl;
-		cout<<"distanceMapDistribution: //distance\tfrequency"<<endl;
-		cout<<transpose(distribG);
+		if (psprc::DEBUG_ENABLED) cout<<"\n\n"<< "// cnm distance map distribution from G, "<<"maxRad "<<maxRad<<"dr "<<dr<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"distanceMapDistribution: //distance\tfrequency"<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<transpose(distribG);
 
 }
 
@@ -210,7 +218,7 @@ void printCornerAngStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		hAng=hAng/sumhAng;
 		VWhAng=VWhAng/sumFlowVolume;
-		cout<<"hAngPore:    \t "<<hAng<<"\t "<<VWhAng<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"hAngPore:    \t "<<hAng<<"\t "<<VWhAng<<endl;
 	}
 
 
@@ -235,7 +243,7 @@ void printCornerAngStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		hAng=hAng/sumhAng;
 		VWhAng=VWhAng/sumFlowVolume;
-		cout<<"hAngThroat:   \t "<<hAng<<"\t "<<VWhAng<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"hAngThroat:   \t "<<hAng<<"\t "<<VWhAng<<endl;
 	}
 
 
@@ -262,7 +270,7 @@ void printCornerAngStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		hAng=hAng/sumhAng;
 		VWhAng=VWhAng/sumFlowVolume;
-		cout<<"hAngElem:  \t "<<hAng<<"\t "<<VWhAng<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"hAngElem:  \t "<<hAng<<"\t "<<VWhAng<<endl;
 	}
 }
 
@@ -284,7 +292,7 @@ void printCornerNumStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		Ncor=Ncor/(nBpPors_-nBSs_);
 		VWNcor=VWNcor/sumFlowVolume;
-		cout<<"NcorPore:    \t "<<Ncor<<"\t "<<VWNcor<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"NcorPore:    \t "<<Ncor<<"\t "<<VWNcor<<endl;
 	}
 
 
@@ -302,7 +310,7 @@ void printCornerNumStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		NcorThroat=NcorThroat/nTrots;
 		VWNcorThroat=VWNcorThroat/sumFlowVolume;
-		cout<<"NcorThroat:  \t "<<NcorThroat<<"\t "<<VWNcorThroat<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"NcorThroat:  \t "<<NcorThroat<<"\t "<<VWNcorThroat<<endl;
 	}
 
 
@@ -322,7 +330,7 @@ void printCornerNumStatistics( const std::vector<Elem const*>&  elemans, int nBS
 		}
 		NcorElem=NcorElem/numElems_;
 		VWNcorElem=VWNcorElem/sumFlowVolume;
-		cout<<"NcorElem:     \t "<<NcorElem<<"\t "<<VWNcorElem<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"NcorElem:     \t "<<NcorElem<<"\t "<<VWNcorElem<<endl;
 	}
 }
 
@@ -344,7 +352,7 @@ void printShapeFactorStatistics( const std::vector<Elem const*>&  elemans, int n
 		GAvgPore=GAvgPore/(nBpPors_-nBSs_);
 		VWGAvgPore=VWGAvgPore/sumFlowVolume;
 		//cout<<"nPores_:\t"<<nPores_<<endl;
-		cout<<"GAvgPore:    \t "<<GAvgPore<<"\t "<<VWGAvgPore<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"GAvgPore:    \t "<<GAvgPore<<"\t "<<VWGAvgPore<<endl;
 	}
 
 
@@ -366,7 +374,7 @@ void printShapeFactorStatistics( const std::vector<Elem const*>&  elemans, int n
 		//cout<<"nTrots:\t"<<nTrots<<endl;
 		//cout<<"GAvgThroat:\t"<<GAvgThroat<<endl;
 		//cout<<"VWGAvgThroat:\t"<<VWGAvgThroat<<endl;
-		cout<<"GAvgThroat:  \t "<<GAvgThroat<<"\t "<<VWGAvgThroat<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"GAvgThroat:  \t "<<GAvgThroat<<"\t "<<VWGAvgThroat<<endl;
 	}
 
 
@@ -390,7 +398,7 @@ void printShapeFactorStatistics( const std::vector<Elem const*>&  elemans, int n
 		//cout<<"numElems_:\t"<<numElems_<<endl;
 		//cout<<"GAvgElem:\t"<<GAvgElem<<endl;
 		//cout<<"VWGAvgElem:\t"<<VWGAvgElem<<endl;
-		cout<<"GAvgElem:     \t "<<GAvgElem<<"\t "<<VWGAvgElem<<endl;
+		if (psprc::DEBUG_ENABLED) cout<<"GAvgElem:     \t "<<GAvgElem<<"\t "<<VWGAvgElem<<endl;
 	}      
 }
 
@@ -438,8 +446,8 @@ void printAspectRatioStatistics( const std::vector<Elem const*>&  elemans, int n
 		VWAWAspRatioAvgPore=VWAWAspRatioAvgPore/sumFlowVolume;
 		VWQWAspRatioAvgPore=VWQWAspRatioAvgPore/sumFlowVolume;
 		//cout<<"nPores_:\t"<<nPores_<<endl;
-		cout<<"//               \tArithmatic\t  VW    \t  VWAW   \t  VWQW   \n";
-		cout<<"AspRatioAvg: \t "
+		if (psprc::DEBUG_ENABLED) cout<<"//               \tArithmatic\t  VW    \t  VWAW   \t  VWQW   \n";
+		if (psprc::DEBUG_ENABLED) cout<<"AspRatioAvg: \t "
 			<<AspRatioAvgPore<<"\t "
 			<<VWAspRatioAvgPore<<"\t "
 			<<VWAWAspRatioAvgPore<<"\t "
@@ -494,7 +502,7 @@ void printCoordinaNumStatistics( const std::vector<Elem const*>&  elemans, int n
 		VWAWCoordNAvgPore=VWAWCoordNAvgPore/sumFlowVolume;
 		VWQWCoordNAvgPore=VWQWCoordNAvgPore/sumFlowVolume;
 		//cout<<"nPores_:\t"<<nPores_<<endl;
-		cout<<"CoordNAvgPore:  \t "
+		if (psprc::DEBUG_ENABLED) cout<<"CoordNAvgPore:  \t "
 			<<CoordNAvgPore<<"\t "
 			<<VWCoordNAvgPore<<"\t "
 			<<VWAWCoordNAvgPore<<"\t "

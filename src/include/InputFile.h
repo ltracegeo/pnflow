@@ -77,8 +77,8 @@ class InputFile {//! InputFile is a general input file reader, with some flexibi
 	InputFile(const string& kwrds, const string& nam, bool multiline=false)
 	:	informative(true), multiline_(multiline)  {  std::istringstream ss(kwrds);  read(ss, nam);  }
 
-	InputFile(std::istream& in, const string& nam, bool multiline=false)
-	:	informative(true), multiline_(multiline) 	{ 	read(in, nam);	}
+	InputFile(std::istream& in, const string& nam, bool multiline=false, bool inform=true)
+	:	informative(inform), multiline_(multiline) 	{ 	read(in, nam);	}
 
    InputFile(const InputFile& input, const string& nam)
 	:	data_(input.data_), fileName_(input.fileName_), folder_(input.folder_), name_(nam),
@@ -360,7 +360,7 @@ class mstream  {
 	thread_local 
 		static std::ofstream  dbgFile; /// output stream to write .dbg  file for debugging
 
-	mstream(std::string fnam, unsigned char po=PRTF|STDO)
+	mstream(std::string fnam, unsigned char po=0)  // po=PRTF|STDO
 	:	outps(po) { if (!fnam.empty() && outps&PRTF) prt_.open(fnam); if(!prt_) outps&=~PRTF; };
 
 	mstream& operator<<(std::ostream& (*fn)(std::ostream&))  {

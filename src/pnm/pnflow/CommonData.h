@@ -94,14 +94,15 @@ class CommonData : public GNMData
 		//oil_.setFluidProps(oilVisc, interfacTen, oilResist, oilDens, epsilonO, zetaO); ///. zetaO is not used
 		rockWaterSurface_.resistivity_=1e300;
 
-		std::cout<<"WO.IFT:"<<watoil_.sigma()<<std::endl;
-		std::cout<<"W.viscosity:"<<water_.viscosity()<<std::endl;
-		std::cout<<"W.resistivity:"<<water_.resistivity()<<std::endl;
-		std::cout<<"W.density:"<<water_.density()<<std::endl;
-		std::cout<<"O.viscosity:"<<oil_.viscosity()<<std::endl;
-		std::cout<<"O.resistivity:"<<oil_.resistivity()<<std::endl;
-		std::cout<<"O.density:"<<oil_.density()<<std::endl; 
-
+		if (input_.informative) {
+			std::cout<<"WO.IFT:"<<watoil_.sigma()<<std::endl;
+			std::cout<<"W.viscosity:"<<water_.viscosity()<<std::endl;
+			std::cout<<"W.resistivity:"<<water_.resistivity()<<std::endl;
+			std::cout<<"W.density:"<<water_.density()<<std::endl;
+			std::cout<<"O.viscosity:"<<oil_.viscosity()<<std::endl;
+			std::cout<<"O.resistivity:"<<oil_.resistivity()<<std::endl;
+			std::cout<<"O.density:"<<oil_.density()<<std::endl;
+		}
 	}
 
 
