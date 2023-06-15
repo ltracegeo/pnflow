@@ -9,6 +9,7 @@
 #include "FlowDomain.h"
 #include "input/input_manager.h"
 #include "input/input_parser.h"
+#include "io/virtual_files_manager.h"
 #include "polygon/cornerApex.h"
 #include "psPrc/netStatistics.h"
 
@@ -20,6 +21,7 @@
 using namespace std;
 using input::InputManager;
 using input::InputParser;
+using io::VirtualFilesManager;
 
 void usageCNF(string exename, int detailed)  {
 
@@ -140,14 +142,21 @@ int main(int argc, char *argv[])  {
 
 #endif
 
+std::string string_output;
+
 extern "C" {
 
-void pnflow(const char *config, const char *link1, const char *link2, const char *node1,
-            const char *node2) {
+const char* pnflow(const char *config, const char *link1, const char *link2, const char *node1,
+                   const char *node2) {
 	bool enable_debug = false;
 	psprc::SetDebug(enable_debug);
 	CornerApex::SetDebug(enable_debug);
+
 	InputParser input_parser(config);
+
+	std::string output_filename = input_parser.GetTitle() + "_upscaled.tsv";
+	VirtualFilesManager::Create(output_filename);
+
 	std::string network_name = input_parser.GetNetworkName();
 	InputManager::WriteStream(network_name + "_link1.dat", link1);
 	InputManager::WriteStream(network_name + "_link2.dat", link2);
@@ -157,7 +166,9 @@ void pnflow(const char *config, const char *link1, const char *link2, const char
 	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
 	inFile.setTitle();
 	pnflowQD(inFile);
-	// return _upscaled.tsv
+
+	string_output = VirtualFilesManager::ToString(output_filename);
+	return string_output.c_str();
 }
 
 }  // extern "C"

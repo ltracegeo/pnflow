@@ -7517,4 +7517,5 @@ sys.path.append(r"../../python")
 
 from pnflow import pnflow
 
-pnflow(CONFIG, LINK1, LINK2, NODE1, NODE2)
+output = pnflow(CONFIG, LINK1, LINK2, NODE1, NODE2)
+print("Test output: ", output)

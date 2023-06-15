@@ -17,4 +17,14 @@ std::string InputParser::GetNetworkName() {
     }
 }
 
+std::string InputParser::GetTitle() {
+    std::regex expression(R"(TITLE\s+(\S+)\s*;)");
+    std::smatch match;
+    if (std::regex_search(input_config_, match, expression)) {
+        return match[1];
+    } else {
+        return "";
+    }
+}
+
 }  // namespace input

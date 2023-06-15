@@ -10,6 +10,7 @@ class InputParser {
     InputParser(const std::string &input_config);
 
     std::string GetNetworkName();
+    std::string GetTitle();
 
   private:
     std::string input_config_;

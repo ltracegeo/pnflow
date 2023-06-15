@@ -23,6 +23,7 @@ using namespace std;
 #include "FlowData.cpp"
 
 #include "InOutCNM.cpp"
+#include "io/vofstream.h"
 #include "setGVoidProps.h"
 
 
@@ -843,7 +844,7 @@ void FlowDomain::writeResultData(bool wantRelPerm, bool wantResIdx)  {
 
 	if(icy==0 && MCPMode)  {
 		string mcpFilename=title_+"_upscaled.tsv";
-		ofstream of(mcpFilename);
+		io::vofstream of(mcpFilename);
 
 		of<<endl<<"\nhomogeneous: \t"<<title_<<";"<<endl<<endl;
 
@@ -924,8 +925,7 @@ void FlowDomain::writeResultData(bool wantRelPerm, bool wantResIdx)  {
 
 	if(MCPMode)  {
 		const string mcpFilename=title_+"_upscaled.tsv";
-		ofstream of(mcpFilename, std::ios_base::app);
-		ensure(of,"can not open "+mcpFilename,2);
+		io::vofstream of(mcpFilename, std::ios_base::app);
 
 		of<<"\n\n\n"<<title_<<"_SwPcKrwKroRI_cycle"<<icy << ":\t  //"<< legend  << endl;
 		of<< "//Sw     \t   Pc(Pa)   \t   Krw      \t   Kro      \t   RI"<<endl;
