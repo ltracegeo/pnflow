@@ -3,7 +3,7 @@
 
 #include "InputFile.h"
 #include "typses.h"
-
+#include "io/vifstream.h"
 
 typedef struct
 {
@@ -130,10 +130,10 @@ private:
 
 	static const int                                        DUMMY_INDEX;
 
-	std::stringstream                                       poreConn_;
-	std::stringstream                                       poreProp_;
-	std::stringstream                                       throatConn_;
-	std::stringstream                                       throatProp_;
+	io::vifstream                                           poreConn_;
+	io::vifstream                                           poreProp_;
+	io::vifstream                                           throatConn_;
+	io::vifstream                                           throatProp_;
 
 	int                                                     connectionsRemoved_;
 	int                                                     origNumPores_;

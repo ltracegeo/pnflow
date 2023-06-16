@@ -15,13 +15,11 @@
 #include <map>
 #include <set>
 
-#include "input/input_manager.h"
 #include "inputData.h"
 #include "typses.h"
 
 
 using namespace std;
-using input::InputManager;
 
 /**
 //
@@ -492,10 +490,10 @@ void InputData::network(int& numPores, int& numThroats, double& xDim, double& yD
 
 	if(binaryFiles_)  {
 		string porePropFile(netNam + "_node.bin");
-		poreProp_ = InputManager::ReadStream(porePropFile, ios::binary);
+		poreProp_.open(porePropFile, ios::binary);
 
 		string throatPropFile(netNam + "_link.bin");
-		throatProp_ = InputManager::ReadStream(throatPropFile, ios::binary);
+		throatProp_.open(throatPropFile, ios::binary);
 
 		poreProp_.read((char *)(&numPores), sizeof(int));
 		poreProp_.read((char *)(&xDim), sizeof(double));
@@ -506,16 +504,16 @@ void InputData::network(int& numPores, int& numThroats, double& xDim, double& yD
 	else
 	{
 		string poreConnFile(netNam + "_node1.dat");          // Open file containing pore connection data
-		poreConn_ = InputManager::ReadStream(poreConnFile);
+		poreConn_.open(poreConnFile);
 
 		string porePropFile(netNam + "_node2.dat");          // Open file containing pore geometry data
-		poreProp_ = InputManager::ReadStream(porePropFile);
+		poreProp_.open(porePropFile);
 
 		string throatConnFile(netNam + "_link1.dat");        // Open file containing throat connection data
-		throatConn_ = InputManager::ReadStream(throatConnFile);
+		throatConn_.open(throatConnFile);
 
 		string throatPropFile(netNam + "_link2.dat");        // Open file containing throat geometry data
-		throatProp_ = InputManager::ReadStream(throatPropFile);
+		throatProp_.open(throatPropFile);
 
 
 		poreConn_ >> numPores >> xDim >> yDim >> zDim;
@@ -626,6 +624,8 @@ void InputData::loadPoreData()  {
 	}
 
 	if(addPeriodicBC_) findBoundaryPores();
+	throatConn_.close();
+	throatProp_.close();
 }
 
 void InputData::findBoundaryPores()  {
@@ -819,6 +819,8 @@ void InputData::loadThroatData()  {
 		lenSumThroat += tr->lenThroat;
 		lenSumPore += (tr->lenPoreOne+tr->lenPoreTwo)/2.;
 	}
+	throatConn_.close();
+	throatProp_.close();
 	averageThroatLength_ = lenSumThroat/origNumThroats_;
 	averagePoreHalfLength_ = lenSumPore/origNumThroats_;
 

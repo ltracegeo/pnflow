@@ -15,6 +15,24 @@ bool VirtualFilesManager::Exists(const std::string &name) {
     return it != stream_map_.end();
 }
 
+std::stringstream& VirtualFilesManager::Read(const std::string &name) {
+    auto it = stream_map_.find(name);
+    if (it != stream_map_.end()) {
+        return *(it->second);
+    } else {
+        std::stringstream output;
+        return output;
+    }
+}
+
+void VirtualFilesManager::Read(const std::string &name, char *str_out, std::streamsize count) {
+    std::string output;
+    auto it = stream_map_.find(name);
+    if (it != stream_map_.end()) {
+        it->second->read(str_out, count);
+    }
+}
+
 std::string VirtualFilesManager::ToString(const std::string &name) {
     auto it = stream_map_.find(name);
     if (it != stream_map_.end()) {

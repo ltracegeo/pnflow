@@ -7,7 +7,6 @@
 
 
 #include "FlowDomain.h"
-#include "input/input_manager.h"
 #include "input/input_parser.h"
 #include "io/virtual_files_manager.h"
 #include "polygon/cornerApex.h"
@@ -19,7 +18,6 @@
 
 
 using namespace std;
-using input::InputManager;
 using input::InputParser;
 using io::VirtualFilesManager;
 
@@ -158,10 +156,10 @@ const char* pnflow(const char *config, const char *link1, const char *link2, con
 	VirtualFilesManager::Create(output_filename);
 
 	std::string network_name = input_parser.GetNetworkName();
-	InputManager::WriteStream(network_name + "_link1.dat", link1);
-	InputManager::WriteStream(network_name + "_link2.dat", link2);
-	InputManager::WriteStream(network_name + "_node1.dat", node1);
-	InputManager::WriteStream(network_name + "_node2.dat", node2);
+	VirtualFilesManager::Write(network_name + "_link1.dat", link1);
+	VirtualFilesManager::Write(network_name + "_link2.dat", link2);
+	VirtualFilesManager::Write(network_name + "_node1.dat", node1);
+	VirtualFilesManager::Write(network_name + "_node2.dat", node2);
 	std::istringstream file_content_stream(config);
 	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
 	inFile.setTitle();

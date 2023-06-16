@@ -29,6 +29,10 @@ class VirtualFilesManager {
         }
     }
 
+    static std::stringstream& Read(const std::string &name);
+
+    static void Read(const std::string &name, char *str_out, std::streamsize count);
+
     static std::string ToString(const std::string &name);
 
     static void Clear();
