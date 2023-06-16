@@ -24,4 +24,8 @@ std::string VirtualFilesManager::ToString(const std::string &name) {
     }
 }
 
+void VirtualFilesManager::Clear() {
+    stream_map_.clear();
+}
+
 }  // namespace io

@@ -31,6 +31,8 @@ class VirtualFilesManager {
 
     static std::string ToString(const std::string &name);
 
+    static void Clear();
+
  private:
     static std::map<std::string, std::unique_ptr<std::stringstream>> stream_map_;
 };

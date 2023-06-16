@@ -168,6 +168,7 @@ const char* pnflow(const char *config, const char *link1, const char *link2, con
 	pnflowQD(inFile);
 
 	string_output = VirtualFilesManager::ToString(output_filename);
+	VirtualFilesManager::Clear();
 	return string_output.c_str();
 }
 
