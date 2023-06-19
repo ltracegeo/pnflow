@@ -250,7 +250,7 @@ private:
 	bool                                    writeOilVelocity_;
 	bool                                    writeResVelocity_;
 	bool                                    writeSlvMatrixAsMatlab_;
-
+	bool                                    write3DOutput_;
 
 
 
