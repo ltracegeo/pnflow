@@ -57,3 +57,6 @@ pkgs/**/bin/
 *.exe
 *.out
 *.app
+
+# Python
+*.egg-info/
