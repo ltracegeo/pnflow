@@ -153,7 +153,9 @@ void setContactAngles(vector<VoidElem*>& pores, vector<VoidElem*>& trots, const 
 //        cout<<trots[k]->conAngleAdv()<<" ";
 	}
  }
+ #ifdef DEBUG
  if(comn.input().informative) cout<<"Contact Angles ["<<int(wb.minV*180/PI)<<"-"<<int((wb.minV+wb.delV)*180/PI)<<"] set for "<<pores.size()<<" pores and "<<trots.size()<<" trots. Crl:"<<wb.cor<<endl;
+ #endif
 }
 
 #ifndef READSETCAS_H

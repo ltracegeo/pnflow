@@ -201,8 +201,9 @@ void FlowDomain::Drainage(double requestedFinalSw, double requestedFinalPc,  dou
 
 
 		outD<<" . ";
-		cout<<endl;
-
+		#ifdef DEBUG
+			cout<<endl;
+		#endif
 	}
 
 
