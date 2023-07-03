@@ -7,10 +7,12 @@ list(REMOVE_ITEM SRC_FILES
 
 # add_executable(pnflow ${SRC_FILES})
 add_library(pnflow MODULE ${SRC_FILES})
-set_target_properties(pnflow PROPERTIES
-    SUFFIX ".lib"
-    PREFIX ""
-)
+if(PNFLOW_WINDOWS)
+    set_target_properties(pnflow PROPERTIES
+        SUFFIX ".lib"
+        PREFIX ""
+    )
+endif()
 
 add_dependencies(pnflow
     hypreSeq
