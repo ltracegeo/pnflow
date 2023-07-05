@@ -624,8 +624,8 @@ void InputData::loadPoreData()  {
 	}
 
 	if(addPeriodicBC_) findBoundaryPores();
-	poreProp_.close();
-	poreConn_.close();
+	throatConn_.close();
+	throatProp_.close();
 }
 
 void InputData::findBoundaryPores()  {

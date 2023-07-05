@@ -336,7 +336,7 @@ double Polygon::Pc_pistonType_ImbHingCLine() const
 			if(waterInCorner_[i].cornerExists())  { 
 
 				double meniscusApexDist, hingConAng(cntAngAdv_); 
-				waterInCorner_[i].getCApexDistConAng(meniscusApexDist, hingConAng, oldPc, crnHafAngs_[i], comn_.sigmaOW(),true,true);
+				waterInCorner_[i].getCApexDistConAng(meniscusApexDist, hingConAng, oldPc, crnHafAngs_[i], comn_.sigmaOW(),true);
 
 				double partus(meniscusApexDist * sin(crnHafAngs_[i]) * oldPc/tension);
 				ensure(partus >= -1. && partus <=  1.);

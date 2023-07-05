@@ -651,7 +651,7 @@ double Triangle::snapOffPrsImbNR() const
 	{
 
 		double apexDist2(0.), teta2(cntAngAdv_); 
-		waterInCorner_[1].getCApexDistConAng(apexDist2, teta2, oldPc, crnHafAngs_[1], tension, true, true);
+		waterInCorner_[1].getCApexDistConAng(apexDist2, teta2, oldPc, crnHafAngs_[1], tension, true);
 
 		double rL2 = -apexDist2*sin(crnHafAngs_[1])/(tension*sin(teta2+crnHafAngs_[1])); 
 
@@ -689,7 +689,7 @@ double Triangle::snapOffPrsImbNR() const
 	{
 
 		double pinnedApexDistance, hingAng(cntAngAdv_); 
-		waterInCorner_[2].getCApexDistConAng(pinnedApexDistance, hingAng, oldPc, crnHafAngs_[2], comn_.water().interfacialTen(), true, true);
+		waterInCorner_[2].getCApexDistConAng(pinnedApexDistance, hingAng, oldPc, crnHafAngs_[2], comn_.water().interfacialTen(), true);
 
 
 		double hingAngDpc = -pinnedApexDistance*sin(crnHafAngs_[2])/(tension*sin(hingAng+crnHafAngs_[2]));

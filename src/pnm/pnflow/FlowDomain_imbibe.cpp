@@ -154,15 +154,15 @@ void FlowDomain::Imbibition(double requestedFinalSw, double requestedFinalPc,  d
 					else 								count1NIWF++;
 			}
 		}
-		cout<<"\n nInWaterFlood0 "<<nInWaterFlood0<<endl;
-		cout<<" nNotInWaterFlood "<<nNotInWaterFlood<<endl;
-		cout<<" nInWaterFlood "<<nInWaterFlood<<endl;
-		cout<<" count1WF "<<count1WF<<endl;
-		cout<<" count1NIWF "<<count1NIWF<<endl;
-		cout<<" n_EventsCh "<<evnts.size()<<endl;
-		(cout<<" n_rockLattice "<<elemans_.size()).flush();
-
-
+		if (input_.informative) {
+			cout<<"\n nInWaterFlood0 "<<nInWaterFlood0<<endl;
+			cout<<" nNotInWaterFlood "<<nNotInWaterFlood<<endl;
+			cout<<" nInWaterFlood "<<nInWaterFlood<<endl;
+			cout<<" count1WF "<<count1WF<<endl;
+			cout<<" count1NIWF "<<count1NIWF<<endl;
+			cout<<" n_EventsCh "<<evnts.size()<<endl;
+			(cout<<" n_rockLattice "<<elemans_.size()).flush();
+		}
 
 		//int WARNING_TOCKECK;
 		/*///. connect oil to all elements connected to inlet, ERROR TODO DELETE TOTEST
@@ -218,8 +218,9 @@ void FlowDomain::Imbibition(double requestedFinalSw, double requestedFinalPc,  d
 
 
 		outD<<" . ";
-		cout<<endl;
-
+		if (input_.informative) {
+			cout<<endl;
+		}
 	}
 
 

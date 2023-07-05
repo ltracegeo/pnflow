@@ -7,7 +7,10 @@
 
 
 #include "FlowDomain.h"
-
+#include "input/input_parser.h"
+#include "io/virtual_files_manager.h"
+#include "polygon/cornerApex.h"
+#include "psPrc/netStatistics.h"
 
 #ifndef __DATE__
  #define __DATE__  "2021"
@@ -15,7 +18,8 @@
 
 
 using namespace std;
-
+using input::InputParser;
+using io::VirtualFilesManager;
 
 void usageCNF(string exename, int detailed)  {
 
@@ -107,7 +111,6 @@ void pnflowQD(InputFile input)  {
 	(cout<<"\n **** upscaled "+input.outputName()+", network "+input.kwrd("networkFile")+" ****\n").flush();
 }
 
-
 #ifndef MAIN
 thread_local std::ofstream    outD;  //!< alias to mstream::dbgFile
 int main(int argc, char *argv[])  {
@@ -137,3 +140,34 @@ int main(int argc, char *argv[])  {
 
 #endif
 
+std::string string_output;
+
+extern "C" {
+
+const char* pnflow(const char *config, const char *link1, const char *link2, const char *node1,
+                   const char *node2) {
+	bool enable_debug = false;
+	psprc::SetDebug(enable_debug);
+	CornerApex::SetDebug(enable_debug);
+
+	InputParser input_parser(config);
+
+	std::string output_filename = input_parser.GetTitle() + "_upscaled.tsv";
+	VirtualFilesManager::Create(output_filename);
+
+	std::string network_name = input_parser.GetNetworkName();
+	VirtualFilesManager::Write(network_name + "_link1.dat", link1);
+	VirtualFilesManager::Write(network_name + "_link2.dat", link2);
+	VirtualFilesManager::Write(network_name + "_node1.dat", node1);
+	VirtualFilesManager::Write(network_name + "_node2.dat", node2);
+	std::istringstream file_content_stream(config);
+	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
+	inFile.setTitle();
+	pnflowQD(inFile);
+
+	string_output = VirtualFilesManager::ToString(output_filename);
+	VirtualFilesManager::Clear();
+	return string_output.c_str();
+}
+
+}  // extern "C"

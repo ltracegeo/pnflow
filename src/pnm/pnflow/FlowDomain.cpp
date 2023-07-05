@@ -23,6 +23,7 @@ using namespace std;
 #include "FlowData.cpp"
 
 #include "InOutCNM.cpp"
+#include "io/vofstream.h"
 #include "setGVoidProps.h"
 
 
@@ -61,6 +62,7 @@ FlowDomain::FlowDomain(InputFile & input)
 	writeWatMatrix_= false;  writeOilMatrix_= false;    writeResMatrix_= false;
 	writeWatVelocity_= false;  writeOilVelocity_= false;  writeResVelocity_= false;
 	writeSlvMatrixAsMatlab_= false;
+	write3DOutput_ = true;
 	amottDataDrainage_.resize(3);   amottDataImbibition_.resize(3);
 	deltaPo_= 0.;  deltaPw_= 0.;
 
@@ -136,6 +138,13 @@ FlowDomain::FlowDomain(InputFile & input)
 		out_ << endl << converted << " elements are converted to micro-porosity type 1\n"<<endl;
 	}
 
+	std::istringstream data;
+	if (input.giv("OUTPUT", data)) {
+		char first_param;
+		char second_param;
+		data >> first_param >> second_param;
+		write3DOutput_ = second_param == 'T';
+	}
 
 	int numSingletsRemoved(0);
 	if( ! input.getOr("DRAIN_SINGLETS",true) )  {
@@ -268,13 +277,14 @@ FlowDomain::FlowDomain(InputFile & input)
 	singlePhaseOilQ_= singlePhaseWaterQ_ * (water_.viscosity() / oil_.viscosity());
 
 	writeResultData(true,true);
-	results3D_.write3D(Pc_, comn_.sigmaOW());
+	if (write3DOutput_) {
+		results3D_.write3D(Pc_, comn_.sigmaOW());
+	}
 
 
 
 
 		KcIncr_=1000.; KcIncrFactor_=.2; minNumFillings_=nBpPors_/200+1, initStepSize_=0.05; extrapCutBack_=0.8; maxFillIncrease_=5.;
-		istringstream data;
 		if(input.giv("SAT_CONVERGENCE", data))  {
 			data >> minPcStep_ >> KcIncr_ >> KcIncrFactor_ >> minNumFillings_ >> initStepSize_ >> extrapCutBack_ >> maxFillIncrease_;
 			//KcIncr_ /= comn_.watoil().sigma();
@@ -708,8 +718,9 @@ void FlowDomain::solve_forRelPermResIndex(bool wantRelPerm, bool wantResIdx)  {
 
 
 	comn_.addKcSwKrsQs(KcSwKrsQs);
-	results3D_.write3D(Pc_, comn_.sigmaOW());
-
+	if (write3DOutput_) {
+		results3D_.write3D(Pc_, comn_.sigmaOW());
+	}
 }
 
 
@@ -843,7 +854,7 @@ void FlowDomain::writeResultData(bool wantRelPerm, bool wantResIdx)  {
 
 	if(icy==0 && MCPMode)  {
 		string mcpFilename=title_+"_upscaled.tsv";
-		ofstream of(mcpFilename);
+		io::vofstream of(mcpFilename);
 
 		of<<endl<<"\nhomogeneous: \t"<<title_<<";"<<endl<<endl;
 
@@ -924,8 +935,7 @@ void FlowDomain::writeResultData(bool wantRelPerm, bool wantResIdx)  {
 
 	if(MCPMode)  {
 		const string mcpFilename=title_+"_upscaled.tsv";
-		ofstream of(mcpFilename, std::ios_base::app);
-		ensure(of,"can not open "+mcpFilename,2);
+		io::vofstream of(mcpFilename, std::ios_base::app);
 
 		of<<"\n\n\n"<<title_<<"_SwPcKrwKroRI_cycle"<<icy << ":\t  //"<< legend  << endl;
 		of<< "//Sw     \t   Pc(Pa)   \t   Krw      \t   Kro      \t   RI"<<endl;

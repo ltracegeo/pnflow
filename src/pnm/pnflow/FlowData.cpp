@@ -4,7 +4,7 @@
 #endif
 #include <iomanip>
 
-
+#include "io/vofstream.h"
 
 
 using namespace std;
@@ -73,7 +73,7 @@ void GNMData::writeResultData(bool wantRelPerm, bool wantResIdx, const std::stri
 
 
 	if (icy==0)  {  if(format=='t')  {
-			ofstream of(nam+"_upscaled.tsv");   ensure(of,"can not open "+nam+"_upscaled.tsv",2);
+			io::vofstream of(nam+"_upscaled.tsv");
 
 			of<<"//-*- C++ -*-\t upscaled results\n\n";
 			of<<"\n\nporousRock:  \t"<<nam<<"\n"<<endl;
@@ -166,7 +166,7 @@ void GNMData::writeResultData(bool wantRelPerm, bool wantResIdx, const std::stri
 
 
 		if(format=='t')  {
-			ofstream of(nam+"_upscaled.tsv", std::ios_base::app);   ensure(of,"can not open "+nam+"_upscaled.tsv",2);
+			io::vofstream of(nam+"_upscaled.tsv", std::ios_base::app);
 
 			of<<"\n"<<nam<<"_SwPcKrwKroRI_cycle"<<icy << ": \t// "<< ((*this).isDrainage() ? "drainage" : "imbibition")<<" \t cycle_"<<icy<<endl;
 			of << "//Sw          \t Pc(Pa)        \t Krw           \t Kro            \t  RI"<<endl;
