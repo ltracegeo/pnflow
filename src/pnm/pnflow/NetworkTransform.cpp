@@ -584,7 +584,9 @@ void modifyInscribedRadii(int model, const string& options, vector<Elem*>& elems
 	istringstream in(options);
 	sort(elems.begin(), elems.end(), ElemRadCmpRed());
 
+	#ifdef DEBUG
 	cout<< "\nmodify R, model == "<< model << endl << endl;
+	#endif
 
 	if(model == 0)  {
 		// Do nothing option

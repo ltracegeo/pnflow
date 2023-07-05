@@ -19,5 +19,6 @@ ExternalProject_Add(hypreSeq
         -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         -DBUILD_SHARED_LIBS=False
         -DCMAKE_TOOLCHAIN_FILE=${PROJECT_SOURCE_DIR}/src/script/toolchain${OPT}.txt
+        -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true
     )
 )

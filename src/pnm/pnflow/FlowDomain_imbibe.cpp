@@ -857,7 +857,9 @@ void FlowDomain::checkUntrapOilIfUnstableConfigsImb(Events<Apex*,PceImbCmp>& evn
 	for(Elem* elem:elemans_)  {
 		if(elem->model()->waterLayer_UntrappedCorner_PcLsnapPc(Pc_-elem->gravityCorrection()))  {
 			outD<<'I';outD.flush();
-			cout<<'I';cout.flush();
+			if (input_.informative) {
+				cout<<'I';cout.flush();
+			}
 
 			if(elem->isInWatFloodVec())  {
 				if (evnts.remove(elem)) elem->setInWatFloodVec(false);

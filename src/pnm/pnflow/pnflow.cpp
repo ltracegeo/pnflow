@@ -108,7 +108,9 @@ void pnflowQD(InputFile input)  {
 			flowsim.Imbibition(endSw, endPc, delSw, wantRelPerm, wantResIdx, entreL, entreR, exitL, exitR);
 	}
 
+	#ifdef DEBUG
 	(cout<<"\n **** upscaled "+input.outputName()+", network "+input.kwrd("networkFile")+" ****\n").flush();
+	#endif
 }
 
 #ifndef MAIN

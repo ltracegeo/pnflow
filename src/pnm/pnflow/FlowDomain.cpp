@@ -33,11 +33,13 @@ using namespace std;
 string title2(const InputFile& input, const string& title)  {
 	string titl2 = input.getOr("outputDir",title+"_res/");
 	if (titl2.back()=='/' || titl2.back()=='\\')  {
-		if (input.kwrd("writeMatrix").size() || input.kwrd("visuaLight").size() || input.kwrd("visualize").size() )
+		if (input.kwrd("writeMatrix").size() || input.kwrd("visuaLight").size() || input.kwrd("visualize").size() ) {
+			#ifdef DEBUG
 			cout<<"creating folder: "<<titl2
 			<< _TRY_(mkdirs(titl2))
 			<<endl;
-		else if (input.kwrd("writeXmf").size()) titl2=title;
+			#endif
+		} else if (input.kwrd("writeXmf").size()) titl2=title;
 	}
 	return titl2;
 }
@@ -70,9 +72,9 @@ FlowDomain::FlowDomain(InputFile & input)
 
 
 	input.echoKeywords(out_.fileStream());
-
+	#ifdef DEBUG
 	cout<<  "Initializing network:"  << endl;
-
+	#endif
 
 
 	bool writeMatInitOnly(false), verboseSlvr(false);

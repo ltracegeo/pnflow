@@ -236,7 +236,9 @@ class InputFile {//! InputFile is a general input file reader, with some flexibi
 			size_t sl=prf.find_last_of("\\/"); if (sl<prf.size()) prf=prf.substr(sl+1);
 			name_ = prf;
 		}
+		#ifdef DEBUG
 		std::cout<< " output prefix: " << name_<<" ";
+		#endif
 	}
 
 

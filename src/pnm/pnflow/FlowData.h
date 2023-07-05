@@ -65,7 +65,9 @@ struct WeibulParam {
 		if(ins.good()) ins >>deltaExp;
 		if(ins.good()) ins >>etaExp;
 		if(ins.good()) ins >>correlation;
+		#ifdef DEBUG
 		std::cout<<"WeibulParam: "<<minV<<"  "<<maxV<<"  "<<deltaExp<<"  "<<etaExp<<"  "<<correlation<<"  "<<std::endl;
+		#endif
 	}
 
 	double minV, maxV;
@@ -85,7 +87,9 @@ struct Weibul1  {
 		if(ins.good()) { ins >>kk; }  kInv=1./kk;
 		cdf1=1.-exp(-pow(lambDV,-kk)); //! ==CDF(1.) = CDF(minV+x/delV), before scale by delV
 		if(ins.good()) ins >>cor;
+		#ifdef DEBUG
 		std::cout<<"Weibul1: "<<minV<<"  "<<minV+delV<<"  "<<lambDV<<"  "<<kk<<"  "<<cor<<"  "<<std::endl;
+		#endif
 		lambDV*=delV; // == lambda*delV here
 	}
 	void scale(double s)        { delV*=s;  lambDV*=s; }
