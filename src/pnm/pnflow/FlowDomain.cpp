@@ -34,9 +34,10 @@ string title2(const InputFile& input, const string& title)  {
 	string titl2 = input.getOr("outputDir",title+"_res/");
 	if (titl2.back()=='/' || titl2.back()=='\\')  {
 		if (input.kwrd("writeMatrix").size() || input.kwrd("visuaLight").size() || input.kwrd("visualize").size() ) {
+			std::string result_msg = _TRY_(mkdirs(titl2));
 			#ifdef DEBUG
 			cout<<"creating folder: "<<titl2
-			<< _TRY_(mkdirs(titl2))
+			<< result_msg
 			<<endl;
 			#endif
 		} else if (input.kwrd("writeXmf").size()) titl2=title;
