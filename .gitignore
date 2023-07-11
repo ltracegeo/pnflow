@@ -41,7 +41,6 @@ pkgs/hypre/src/hypre/
 *.pch
 
 # Compiled Dynamic libraries
-*.so
 *.dylib
 *.dll
 
