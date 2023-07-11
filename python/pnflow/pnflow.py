@@ -1,8 +1,14 @@
 import ctypes
 import os
+import platform
+
+if platform.system() == "Windows":
+    library_filename = "pnflow.lib"
+else:
+    library_filename = "libpnflow.so"
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
-pnflow_libc = ctypes.cdll.LoadLibrary(os.path.join(current_dir, "pnflow.lib"))
+pnflow_libc = ctypes.cdll.LoadLibrary(os.path.join(current_dir, library_filename))
 pnflow_libc.pnflow.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 pnflow_libc.pnflow.restype = ctypes.c_char_p
 

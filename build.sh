@@ -78,7 +78,7 @@ function build_pnflow {(
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         cp ./src/pnm/pnflow/pnflow.lib ../python/pnflow/
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
-        cp ./src/pnm/pnflow/pnflow.so ../python/pnflow/
+        cp ./src/pnm/pnflow/libpnflow.so ../python/pnflow/
     fi
 )}
 
