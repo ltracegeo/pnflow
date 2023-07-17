@@ -42,6 +42,9 @@ visuaLight  T        T          T         F          T ;
 
 PORE_FILL_ALG: blunt2;
 PORE_FILL_WGT: 0.0 0.5 1.0 2.0 5.0 10.0;
+
+OUTPUT T F;
+
 """
 
 LINK1 = """2515
