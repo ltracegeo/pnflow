@@ -95,7 +95,7 @@ results3D::results3D(const InputFile& input, const GNMData * comn, string output
 
 
 //! write driver controlling when to write and what format to write
-void results3D::write3D(double pc, double tension, bool endCycle)
+void results3D::write3D(double pc, double tension, double sw, bool endCycle)
 {
 	ensure(nBSs_>0,"internal data not initialized",2);
 	int icycle=comn_->dispCycle();
@@ -111,7 +111,7 @@ void results3D::write3D(double pc, double tension, bool endCycle)
 	if ( _1At(vLinAC21I_,icycle*4) || (endCycle  && _1At(vLinAC21I_,icycle*4+1)) )
 	{ /// quasi-3D visualization
 		if(inform) (cout<<" vis").flush();
-			writeThroatLines(prefix+suffix+".vtu", pc, tension,icycle,iWrite_, endCycle);
+			writeThroatLines(prefix+suffix+".vtu", pc, sw, tension,icycle,iWrite_, endCycle);
 		if(_1At(vLinAC21I_,icycle*4+2))
 		{
 			//vtuWriteThroatCornLines(prefix+"Layers"+suffix+".vtu", pc, tension,icycle,iWrite_, endCycle);
@@ -893,7 +893,7 @@ void results3D::vtuWriteThroats(string fnam, double pc, double tension)
 
 
 /// ////////////////////////////////////   throat lines   ///////////////////////////////////////////////////////
-void results3D::writeThroatLines(string fName, double pc, double tension, int icycl, double istp, bool endCycle)
+void results3D::writeThroatLines(string fName, double pc, double sw, double tension, int icycl, double istp, bool endCycle)
 {
 
 	#define bcncs elems_[ib]->connections()
@@ -904,7 +904,7 @@ void results3D::writeThroatLines(string fName, double pc, double tension, int ic
 	vector<array<short,2> > btrotcpis(nElms,{{-1,-1}});
 
 	outp<<results3D::start(nElms+elems_[0]->connections().size()+elems_[1]->connections().size(),nElms-(nBpPors_));
-
+	outp << "<!-- Sw: " << sw << " Cycle: " << icycl << " -->\n";
 
 	outp<<"	  <Points>\n";
 	{	outp<<"		<DataArray type = \"Float32\" NumberOfComponents = \"3\" format = \"ascii\">\n";

@@ -57,8 +57,10 @@ function process_args {
 
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         PNFLOW_WINDOWS="ON"
+        BUILD_DIR=win
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
         PNFLOW_WINDOWS="OFF"
+        BUILD_DIR=linux
     else
         echo "error: unsupported platform ${ARG_PLATFORM}"
         exit 1
@@ -71,24 +73,24 @@ function process_args {
 }
 
 function build_pnflow {(
-    mkdir -p build
-    cd build
-    cmake -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} ${BUILD_CMAKE_PARAMS} ..
+    mkdir -p build/${BUILD_DIR}
+    cd build/${BUILD_DIR}
+    cmake -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} ${BUILD_CMAKE_PARAMS} ../..
     make
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
-        cp ./src/pnm/pnflow/pnflow.lib ../python/pnflow/
+        cp ./src/pnm/pnflow/pnflow.lib ../../python/pnflow/
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
-        cp ./src/pnm/pnflow/libpnflow.so ../python/pnflow/
+        cp ./src/pnm/pnflow/libpnflow.so ../../python/pnflow/
     fi
 )}
 
 function build_tests {(
     cd teste/c/
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
-        cp ../../build/src/pnm/pnflow/pnflow.lib .
-        x86_64-w64-mingw32-gcc -static-libgcc test.c -L../../build/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
+        cp ../../build/${BUILD_DIR}/src/pnm/pnflow/pnflow.lib .
+        x86_64-w64-mingw32-gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
-        gcc -static-libgcc test.c -L../../build/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
+        gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/${BUILD_DIR}/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
     fi
 )}
 

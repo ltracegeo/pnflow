@@ -281,7 +281,7 @@ FlowDomain::FlowDomain(InputFile & input)
 
 	writeResultData(true,true);
 	if (write3DOutput_) {
-		results3D_.write3D(Pc_, comn_.sigmaOW());
+		results3D_.write3D(Pc_, comn_.sigmaOW(), Sw_);
 	}
 
 
@@ -722,7 +722,7 @@ void FlowDomain::solve_forRelPermResIndex(bool wantRelPerm, bool wantResIdx)  {
 
 	comn_.addKcSwKrsQs(KcSwKrsQs);
 	if (write3DOutput_) {
-		results3D_.write3D(Pc_, comn_.sigmaOW());
+		results3D_.write3D(Pc_, comn_.sigmaOW(), Sw_);
 	}
 }
 

@@ -24,7 +24,7 @@ public:
 	results3D(const InputFile& input,const GNMData* comn, ststr outputfolder, const std::vector<Elem const *>*  elems, size_t nBP2=0, size_t n6pPors=0);
 	void init(size_t nBP2, size_t n6pPors) {nBSs_=nBP2 ; nBpPors_=n6pPors;};
 
-	void write3D(double pc, double intfacTen, bool endCycle = false);
+	void write3D(double pc, double intfacTen, double sw, bool endCycle = false);
 
 			private: ///. depricated
 
@@ -32,7 +32,7 @@ public:
 				ststr  finish();
 				void vtuWritePores(ststr suffix, double pc, double intfacTen);
 				void vtuWriteThroats(ststr suffix, double pc, double intfacTen);
-				void writeThroatLines(ststr fName, double pc, double tension, int icycl, double tstp, bool endCycle);
+				void writeThroatLines(ststr fName, double pc, double sw, double tension, int icycl, double tstp, bool endCycle);
 
 	void writeThroatLinesXmf(ststr suffix, double pc, double tension, int icycl, double tstp, bool endCycle);
 
