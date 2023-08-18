@@ -904,7 +904,7 @@ void results3D::writeThroatLines(string fName, double pc, double sw, double tens
 	vector<array<short,2> > btrotcpis(nElms,{{-1,-1}});
 
 	outp<<results3D::start(nElms+elems_[0]->connections().size()+elems_[1]->connections().size(),nElms-(nBpPors_));
-	outp << "<!-- Sw: " << sw << " Cycle: " << icycl << " -->\n";
+	outp << "<!-- Animation data used by GeoSlicer. Deleting this comment will break compatibility. # Sw: " << sw << " Cycle: " << icycl << " -->\n";
 
 	outp<<"	  <Points>\n";
 	{	outp<<"		<DataArray type = \"Float32\" NumberOfComponents = \"3\" format = \"ascii\">\n";
