@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker run --rm -it -v .:/volume --user 1000:1000 pnflow-build-linux "$@"
+USER_ID=$(id -u)
+docker run --rm -it -v .:/volume --user ${USER_ID}:${USER_ID} pnflow-build-linux "$@"
