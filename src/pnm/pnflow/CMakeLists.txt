@@ -27,7 +27,9 @@ execute_process(
     OUTPUT_VARIABLE RELEASE_DATE
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-target_compile_definitions(pnflow PRIVATE RELEASE_DATE=\"${RELEASE_DATE}\")
+target_compile_definitions(pnflow
+    PRIVATE RELEASE_DATE=\"${RELEASE_DATE}\"
+)
 
 target_include_directories(pnflow
     PRIVATE ${PROJECT_SOURCE_DIR}/pkgs/hypre/src/hypre/include
@@ -38,9 +40,16 @@ target_include_directories(pnflow
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/psPrc
 )
 
-target_link_libraries(pnflow
-    PRIVATE -static-libstdc++
-    PRIVATE -static-libgcc
-    PRIVATE stdc++fs
-    ${CMAKE_BINARY_DIR}/pkgs/hypreSeq-prefix/src/hypreSeq-build/libHYPRE.a
-)
+if(PNFLOW_WINDOWS)
+    target_link_libraries(pnflow
+        PRIVATE -static-libstdc++
+        PRIVATE -static-libgcc
+        PRIVATE stdc++fs
+        ${CMAKE_BINARY_DIR}/pkgs/hypreSeq-prefix/src/hypreSeq-build/libHYPRE.a
+    )
+else()
+    target_link_libraries(pnflow
+        PRIVATE stdc++fs
+        ${CMAKE_BINARY_DIR}/pkgs/hypreSeq-prefix/src/hypreSeq-build/libHYPRE.a
+    )
+endif()

@@ -14,6 +14,12 @@ This repository hosts the classical network flow simulation code called pnflow.
 See also README files of other modules which are located in their own directories:    
 [src/libvoxel](src/libvoxel), [src/script](src/script) and in [pkgs](pkgs).
 
+## Build with docker
+
+From repository's root dir, just run the following script:
+```console
+./docker/build_all.sh
+```
 
  ----------------------------------------------------------------
 
