@@ -386,33 +386,33 @@ double Polygon::Pc_pistonType_ImbHingCLine() const
 		return newPc;
 	}
 	else if(err < 0.1)  {
-		cout<< "Problem in Polygon::mspCurveRadHingImb error:" <<err <<" %of " <<newPc <<"  teta " <<cntAngAdv_ << endl;
+		// cout<< "Problem in Polygon::mspCurveRadHingImb error:" <<err <<" %of " <<newPc <<"  teta " <<cntAngAdv_ << endl;
 		return newPc;
 	}
 
 
-	{cerr << endl
-		<< "=================================================" << endl
-		<< "Error: Failed to obtain valid value for threshold" << endl
-		<< "radius of curvature in piston type displacement  " << endl
-		<< "during water injection."                           << endl
-		<< "Trapped water: " << waterInCorner_[0].trappedCorner().first << endl
-		<< "Err  " << err << endl
-		<< "Con ang " << cntAngAdv_*180./PI << endl
-		<< "Con ang " << cntAngAdv_ << endl
-		<< "Con ang " << cntAngRec_ << endl
-		<< "Radius " << R_ << endl
-		<< "oldPc " << oldPc << endl
-		<< "newPc " << newPc << endl
-		<< "G " << shapeFactor_ << endl
-		<< "Iteration " << itr << endl
-		<< "adPc " << waterInCorner_[0].advancingPc() << endl
-		<< "recPc " << waterInCorner_[0].receedingPc() << endl
-		<< "recPc " << waterInCorner_[0].pinnedApexDist() << endl
-		<< "=================================================" << endl;   
-					//((double*)&R_)[10000000]=0.;
-		//exit(-1);
-	}
+	// {cerr << endl
+	// 	<< "=================================================" << endl
+	// 	<< "Error: Failed to obtain valid value for threshold" << endl
+	// 	<< "radius of curvature in piston type displacement  " << endl
+	// 	<< "during water injection."                           << endl
+	// 	<< "Trapped water: " << waterInCorner_[0].trappedCorner().first << endl
+	// 	<< "Err  " << err << endl
+	// 	<< "Con ang " << cntAngAdv_*180./PI << endl
+	// 	<< "Con ang " << cntAngAdv_ << endl
+	// 	<< "Con ang " << cntAngRec_ << endl
+	// 	<< "Radius " << R_ << endl
+	// 	<< "oldPc " << oldPc << endl
+	// 	<< "newPc " << newPc << endl
+	// 	<< "G " << shapeFactor_ << endl
+	// 	<< "Iteration " << itr << endl
+	// 	<< "adPc " << waterInCorner_[0].advancingPc() << endl
+	// 	<< "recPc " << waterInCorner_[0].receedingPc() << endl
+	// 	<< "recPc " << waterInCorner_[0].pinnedApexDist() << endl
+	// 	<< "=================================================" << endl;
+	// 				//((double*)&R_)[10000000]=0.;
+	// 	//exit(-1);
+	// }
 	return 0.;
 }
 
