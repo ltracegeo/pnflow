@@ -386,11 +386,13 @@ double Polygon::Pc_pistonType_ImbHingCLine() const
 		return newPc;
 	}
 	else if(err < 0.1)  {
+		#ifdef DEBUG
 		cout<< "Problem in Polygon::mspCurveRadHingImb error:" <<err <<" %of " <<newPc <<"  teta " <<cntAngAdv_ << endl;
+		#endif
 		return newPc;
 	}
 
-
+	#ifdef DEBUG
 	{cerr << endl
 		<< "=================================================" << endl
 		<< "Error: Failed to obtain valid value for threshold" << endl
@@ -409,10 +411,11 @@ double Polygon::Pc_pistonType_ImbHingCLine() const
 		<< "adPc " << waterInCorner_[0].advancingPc() << endl
 		<< "recPc " << waterInCorner_[0].receedingPc() << endl
 		<< "recPc " << waterInCorner_[0].pinnedApexDist() << endl
-		<< "=================================================" << endl;   
+		<< "=================================================" << endl;
 					//((double*)&R_)[10000000]=0.;
 		//exit(-1);
 	}
+	#endif
 	return 0.;
 }
 
