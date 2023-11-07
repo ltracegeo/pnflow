@@ -80,7 +80,9 @@ void CornerApex::finitCornerApex(double pc, double conAngRec, double conAngAdv, 
 		double apxDist;
 		double conAng(oilInj ? conAngRec : conAngAdv); 
 		getCApexDistConAng(apxDist, conAng, pc, halfAng, intfacTen, true); ///. warnign don't send initedApexDist_ directly
+		#ifdef DEBUG
 		if (apxDist <=0. || apxDist > parentShape_->RRR()/tan(halfAng)*2) 	{ cout<<" xkf ";	}
+		#endif
 
 		initedApexDist_ = apxDist;
 

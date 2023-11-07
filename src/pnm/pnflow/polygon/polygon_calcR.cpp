@@ -49,8 +49,10 @@ double Polygon::calcR(double pc)
 	}
 
 	ensure(conductanceOil_ >= 0. && (conductanceWater_.first >= 0. || conductanceWater_.second >= 0.));
+	#ifdef DEBUG
 	if ( !(conductanceOil_ >= 0. && (conductanceWater_.first >= 0. || conductanceWater_.second >= 0.) ) )
 		cout<<"Ks = "<< conductanceOil_ << "  " << conductanceWater_.first << "  " << conductanceWater_.second <<endl;
+	#endif
 	///. TODO: sensitivity analysis, add non-linearity by decoupling Aw_dl from Sw
 	
 
@@ -227,9 +229,11 @@ void Polygon::calcR_oilWithWaterInCorners(double cappPressure)
 		{
 
 			waterInCorner_[i].getCApexDistConAng(apexDist, conAngCurr, cappPressure, crnHafAngs_[i], comn_.sigmaOW());
+			#ifdef DEBUG
 			if (apexDist >RRR()/tan(crnHafAngs_[0])*2) 	{	cout<<" sxp ";	}
 			
 			if(debugLevel>1 &&(apexDist < 0.))         cout<<" apexD"<<apexDist<<" ";
+			#endif
 
 			double dlCornerArea = dimLessCornerArea(crnHafAngs_[i], conAngCurr);
 			double conductance = cornerConductance(dlCornerArea, apexDist, crnHafAngs_[i], conAngCurr, comn_.water().viscosity());

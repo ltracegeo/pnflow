@@ -916,7 +916,9 @@ void FlowDomain::untrap_OilGanglia(Events<Apex*,PceDrainCmp>& evnts, Elem* elem)
 					shyp->insertWatSnapEvent_IfSnapPcHgPc(waterFillingEvents, Pc_-newElems[i]->gravityCorrection());   //  => insert water snap off + oil layer collapse
 					if(shyp->waterLayer_UntrappedCorner_PcLsnapPc(Pc_))  {
 						outD<<'I';outD.flush();
-						cout<<'I';cout.flush();
+						if (input_.informative) {
+							cout<<'I';cout.flush();
+						}
 					}
 				}
 			}
