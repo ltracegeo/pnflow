@@ -20,5 +20,6 @@ ExternalProject_Add(hypreSeq
         -DBUILD_SHARED_LIBS=False
         -DCMAKE_TOOLCHAIN_FILE=${PROJECT_SOURCE_DIR}/src/script/toolchain${OPT}.txt
         -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true
+        -DCMAKE_C_COMPILER_WORKS=True
     )
 )
