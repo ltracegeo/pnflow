@@ -75,7 +75,7 @@ function process_args {
 function build_pnflow {(
     mkdir -p build/${BUILD_DIR}
     cd build/${BUILD_DIR}
-    cmake -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} ${BUILD_CMAKE_PARAMS} ../..
+    cmake -G "Unix Makefiles" -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} ${BUILD_CMAKE_PARAMS} ../..
     make
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         cp ./src/pnm/pnflow/pnflow.lib ../../python/pnflow/
