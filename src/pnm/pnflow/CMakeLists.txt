@@ -5,13 +5,16 @@ list(REMOVE_ITEM SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/FlowData.cpp
 )
 
-# add_executable(pnflow ${SRC_FILES})
-add_library(pnflow MODULE ${SRC_FILES})
-if(PNFLOW_WINDOWS)
-    set_target_properties(pnflow PROPERTIES
-        SUFFIX ".lib"
-        PREFIX ""
-    )
+if(PNFLOW_AS_LIB)
+    add_library(pnflow MODULE ${SRC_FILES})
+    if(PNFLOW_WINDOWS)
+        set_target_properties(pnflow PROPERTIES
+            SUFFIX ".lib"
+            PREFIX ""
+        )
+    endif()
+else()
+    add_executable(pnflow ${SRC_FILES})
 endif()
 
 add_dependencies(pnflow
