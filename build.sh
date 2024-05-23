@@ -98,9 +98,9 @@ function build_tests {(
     cd teste/c/
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         cp ../../build/${BUILD_DIR}/src/pnm/pnflow/pnflow.lib .
-        x86_64-w64-mingw32-gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
+        x86_64-w64-mingw32-g++ -static-libgcc test.cpp -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
-        gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/${BUILD_DIR}/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
+        g++ -static-libgcc test.cpp -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/${BUILD_DIR}/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
     fi
 )}
 
