@@ -571,6 +571,11 @@ void FlowDomain::popUpdateWaterInj(Events<Apex*,PceImbCmp>& evnts, bool& insideB
 
 	{
 		Elem *currElemCh = evnts.pop()->parentModel()->ChParent();
+		std::cout << "Invasion Pc: " << std::fixed << std::setw(10) << std::setprecision(2) << currElemCh->entryPc() <<
+				" Radius: " << std::scientific << currElemCh->RRR() <<
+				" G: " << std::setprecision(4) << std::fixed << currElemCh->model()->shapeFactor() <<
+				" n_corners: " << currElemCh->model()->numCorners() <<
+				" area: " << std::scientific << currElemCh->model()->area() << std::endl;
 		FlowDomain::popUpdateCentreInj_Water(currElemCh, evnts, localPc);
 
 		if(imbListOut_)  {
