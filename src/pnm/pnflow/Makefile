@@ -23,7 +23,8 @@ srcs = \
 	ElementThroat.cpp    pnflow.cpp \
 	inputData.cpp     FlowDomain.cpp  FlowDomain_drain.cpp   \
 	FlowDomain_imbibe.cpp   NetworkTransform.cpp   hypreSolver.cpp psPrc/vtuWriter.cpp \
-	Random.cpp
+	Random.cpp io/vifstream.cpp io/vofstream.cpp input/input_parser.cpp \
+	io/virtual_files_manager.cpp
 
 USE_msTEST=1
 USE_HYPRESEQ=1
