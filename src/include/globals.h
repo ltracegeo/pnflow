@@ -72,13 +72,15 @@ namespace std {}
 #ifndef Tst_SkipH  /// ensure, alert (and ifnot hack)  runtime checks 
 #define Tst_SkipH
 	// Run-time check and testing macros
-	inline bool _cerr_(std::string hdr="",std::string msg="", int xit=0) { // for debugger breakpoints: don't optimize out please !!!
-		#ifdef DEBUG
-		if(xit)
+	inline bool _cerr_(std::string hdr="",std::string msg="", int xit=0) {  // for debugger breakpoints: don't optimize out please !!!
+		if(xit) {
 			throw std::runtime_error(hdr+msg);
-		else
-			std::cerr<< hdr+msg <<std::endl; return true;
-		#endif
+		} else {
+			#ifdef DEBUG
+				std::cerr<< hdr+msg <<std::endl;
+			#endif
+		}
+		return true;
 	}
 
 	 #define ERR_HDR(_xit_)  std::string(_xit_?"\n\n  Error":"\n  Warning") \
