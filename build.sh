@@ -9,6 +9,7 @@ Automate pnflow build
 
 Options:
     -h, --help      Display this message and exit
+    -e, --exe       Build as executable instead of library
     -p, --platfrom  Target system (default: Windows)
     -t, --tests     Also build tests
     -d, --debug     Build with debug symbols
@@ -16,6 +17,7 @@ EOF
 }
 
 function get_args {
+    ARG_BUILD_AS_EXE=false
     ARG_PLATFORM="Windows"
     ARG_BUILD_TESTS=false
     ARG_DEBUG=false
@@ -25,6 +27,9 @@ function get_args {
             -h|--help)
                 usage
                 exit 0
+                ;;
+            -e|--exe)
+                ARG_BUILD_AS_EXE=true
                 ;;
             -p|--platform)
                 if [[ -z $2 ]]; then
@@ -54,6 +59,11 @@ function process_args {
     BUILD_CMAKE_PARAMS=""
     TESTS_GCC_PARAMS=""
 
+    if ${ARG_BUILD_AS_EXE}; then
+        DPNFLOW_AS_LIB="OFF"
+    else
+        DPNFLOW_AS_LIB="ON"
+    fi
 
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         PNFLOW_WINDOWS="ON"
@@ -75,7 +85,7 @@ function process_args {
 function build_pnflow {(
     mkdir -p build/${BUILD_DIR}
     cd build/${BUILD_DIR}
-    cmake -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} ${BUILD_CMAKE_PARAMS} ../..
+    cmake -G "Unix Makefiles" -DPNFLOW_WINDOWS=${PNFLOW_WINDOWS} -DPNFLOW_AS_LIB=${DPNFLOW_AS_LIB} ${BUILD_CMAKE_PARAMS} ../..
     make
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         cp ./src/pnm/pnflow/pnflow.lib ../../python/pnflow/
@@ -88,9 +98,9 @@ function build_tests {(
     cd teste/c/
     if [[ ${ARG_PLATFORM} == "Windows" ]]; then
         cp ../../build/${BUILD_DIR}/src/pnm/pnflow/pnflow.lib .
-        x86_64-w64-mingw32-gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
+        x86_64-w64-mingw32-g++ -static-libgcc test.cpp -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow
     elif [[ ${ARG_PLATFORM} == "Linux" ]]; then
-        gcc -static-libgcc test.c -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/${BUILD_DIR}/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
+        g++ -static-libgcc test.cpp -L../../build/${BUILD_DIR}/src/pnm/pnflow/ -I../../src/pnm/pnflow/ -lpnflow -Wl,-rpath,${PWD}/../../build/${BUILD_DIR}/src/pnm/pnflow/ ${TESTS_GCC_PARAMS}
     fi
 )}
 
