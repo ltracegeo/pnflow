@@ -693,8 +693,8 @@ double hypreSolver::getFlowRate(HYPRE_IJVector xxx, const Fluid* fluid, double& 
 */
 void hypreSolver::fillMatrixHypre(HYPRE_IJMatrix AAA, HYPRE_IJVector bbb, HYPRE_IJVector xxx, double inletPrs, double outletPrs, const Fluid& fluid, bool writeVelocity)  {
 	int nnz;
-	std::vector<double> values(max_connections_);
-	std::vector<int> cols(max_connections_);
+	std::vector<double> values(max_connections_ + 1);
+	std::vector<int> cols(max_connections_ + 1);
 	fluidf ff = fluid.ff();
 
 	int row(0);
