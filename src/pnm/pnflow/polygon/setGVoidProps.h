@@ -327,7 +327,7 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 		vector<VoidElem*> poresToSeed;poresToSeed.reserve(nBpPors);
 	   {
 			for(int i= 2; i < nBpPors; ++i)
-				if (auto elem=dynamic_cast<VoidElem*>(elemans[i]))  if(elem->exists(OIL))  poresToSeed.push_back(elem);
+				if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel()))  if(elem->exists(OIL))  poresToSeed.push_back(elem);
 
 			vector<int> clustDiams(poresToSeed.size());
 			for(size_t i= 0; i<clustDiams.size(); ++i)
@@ -342,7 +342,7 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 
 
 	   }
-		vector<VoidElem*> pores2BAltered; poresToSeed.reserve(poresToSeed.size());
+		vector<VoidElem*> pores2BAltered; pores2BAltered.reserve(poresToSeed.size());
 		vector<VoidElem*> trots2BAltered; trots2BAltered.reserve(poresToSeed.size()*3);
 
 
