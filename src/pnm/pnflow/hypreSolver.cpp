@@ -763,8 +763,7 @@ void hypreSolver::fillMatrixHypre(HYPRE_IJMatrix AAA, HYPRE_IJVector bbb, HYPRE_
 
 						rhs += conductance * localOutletPrs;
 					}
-					else                                                        // Interior point
-					{
+					else if (poreiRows_[prj->index()] != -1) {                  // Interior point
 						values[nnz]=-conductance;
 						cols[nnz++]=poreiRows_[prj->index()];
 					}
