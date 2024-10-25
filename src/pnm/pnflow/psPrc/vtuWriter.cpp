@@ -1141,6 +1141,46 @@ void results3D::writeThroatLines(string fName, double pc, double sw, double tens
 		 //for(i=0; i<int(bcncs.size()); ++i){ outp<<elems_[ib]->cachInd<<_nl_; }
 		//outp<<"\n		</DataArray>"<<endl;
 
+		outp<<"		<DataArray type=\"Int32\" Name=\"inlets\" format=\"ascii\" RangeMin=\"0\" RangeMax=\"1\">\n";
+		std::vector<int> inlet_list(nElms, 0);
+		for(int outT = 0; outT < elems_[0]->nCncts(); ++outT) {
+			auto throat = elems_[0]->neib(outT);
+			int inlet_pore_index = throat->neib(0)->index();
+			if (inlet_pore_index == 0) {
+				inlet_pore_index = throat->neib(1)->index();
+			}
+			inlet_list[inlet_pore_index] = 1;
+		}
+		for (int inlet : inlet_list) {
+			outp << inlet << _nl_;
+		}
+		for (ib=0; ib<2; ++ib) {
+		    for (i=0; i < int(bcncs.size()); ++i) {
+				outp << 0 << _nl_;
+			}
+		}
+		outp<<"\n		</DataArray>"<<endl;
+		
+		outp<<"		<DataArray type=\"Int32\" Name=\"outlets\" format=\"ascii\" RangeMin=\"0\" RangeMax=\"1\">\n";
+		std::vector<int> outlet_list(nElms, 0);
+		for(int outT = 0; outT < elems_[OutI]->nCncts(); ++outT) {
+			auto throat = elems_[OutI]->neib(outT);
+			int outlet_pore_index = throat->neib(0)->index();
+			if (outlet_pore_index == OutI) {
+				outlet_pore_index = throat->neib(1)->index();
+			}
+			outlet_list[outlet_pore_index] = 1;
+		}
+		for (int outlet : outlet_list) {
+			outp << outlet << _nl_;
+		}
+		for (ib=0; ib<2; ++ib) {
+		    for (i=0; i < int(bcncs.size()); ++i) {
+				outp << 0 << _nl_;
+			}
+		}
+		outp<<"\n		</DataArray>"<<endl;
+
 	}outp<<"	  </PointData>\n"; /////////////////////////////////////////////////////////
 
 
