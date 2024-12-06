@@ -7,7 +7,11 @@
 #include "Element.h"
 #include "CommonData.h"
 
-
+enum class InvasionMethod {
+	PistonLike,
+	PoreBodyFilling,
+	SnapOff,
+};
 
 class CommonData;
 ////////////////////////////// BASE CLASS FOR PORE SHAPES ////////////////////////////////
@@ -116,6 +120,11 @@ public:
 
 	const CommonData& commonData() {return comn_;}
 
+	void SetInvasionMethod(InvasionMethod invasion_method) const;
+
+	InvasionMethod GetInvasionMethod() const;
+
+	std::string GetInvasionMethodStr() const;
 
 	double  K_E_SP, K_Q_SP;
 
@@ -160,6 +169,9 @@ protected:
 	std::pair<double, double>       conductanceWater_;
 	std::pair<double, double>       conductanceWaterOldToCheck_;
 	friend class InOutBoundary;
+
+ private:
+    mutable InvasionMethod invasion_method_;
 
 };
 

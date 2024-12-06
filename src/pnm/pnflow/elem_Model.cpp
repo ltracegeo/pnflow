@@ -35,5 +35,22 @@ ElemModel::ElemModel(Elem& parent, const CommonData& common, double radius, int 
 	Pc_pistonTypeRec_ = -20000.*comn_.sigmaOW()*(2.) / R_;     ///. TOBE initialised properly later, delete to check for errors
 }
 
+void ElemModel::SetInvasionMethod(InvasionMethod invasion_method) const {
+	invasion_method_ = invasion_method;
+}
 
+InvasionMethod ElemModel::GetInvasionMethod() const {
+	return invasion_method_;
+}
+
+std::string ElemModel::GetInvasionMethodStr() const {
+	switch (invasion_method_) {
+		case InvasionMethod::PistonLike:
+			return "PistonLike";
+		case InvasionMethod::PoreBodyFilling:
+			return "PoreBodyFilling";
+		case InvasionMethod::SnapOff:
+			return "SnapOff";
+	}
+}
 

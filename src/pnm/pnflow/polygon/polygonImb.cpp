@@ -247,6 +247,7 @@ double Polygon::centreEntryPrsWatInj()  {
 			outD<<" e"<<displacementType_<<elem_.index()<<":"<<pistonEntryPrs<<" ";
 			outD<<" e"<<'P'<<elem_.index()<<":"<<snapOffPrs<<" ";
 		 }
+	   elem_.model()->SetInvasionMethod(InvasionMethod::PistonLike);
 	   return pistonEntryPrs;
 	}
 	else
@@ -258,6 +259,7 @@ double Polygon::centreEntryPrsWatInj()  {
 				outD<<" e"<<displacementType_<<elem_.index()<<":"<<snapOffPrs<<" ";
 				outD<<" e"<<'P'<<elem_.index()<<":"<<pistonEntryPrs<<" ";
 			}
+		elem_.model()->SetInvasionMethod(InvasionMethod::SnapOff);
 		return snapOffPrs;
 	}
   
