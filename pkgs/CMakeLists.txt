@@ -21,5 +21,6 @@ ExternalProject_Add(hypreSeq
         -DCMAKE_TOOLCHAIN_FILE=${PROJECT_SOURCE_DIR}/src/script/toolchain${OPT}.txt
         -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true
         -DCMAKE_C_COMPILER_WORKS=True
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
 )

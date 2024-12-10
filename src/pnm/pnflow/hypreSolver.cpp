@@ -84,10 +84,16 @@ double                  hypreSolver::TOLERANCE = 1.0E-29;
 hypreSolver::hypreSolver(const vector<Elem*>& network, const vector<Elem*>& inlet, const vector<Elem*>& outlet,
 			   int nBSs, int nBpPors, int debugMode, string matFileName, bool matlabFormat) 
  : debugMode_(debugMode), elemans_(network), inPors_(inlet), outPores_(outlet), nBSs_(nBSs), nBpPors_(nBpPors), poreiRows_(nBpPors,-1) 
-   ,matrixFileName_(matFileName) // probSize_(nPors-1),
+   ,matrixFileName_(matFileName), max_connections_(0) // probSize_(nPors-1),
 {
 
 	rowedPores_.reserve(network.size());
+
+	for(int i = nBSs_; i < nBpPors_; ++i)  {
+		if (elemans_[i]->nCncts() > max_connections_) {
+			max_connections_ = elemans_[i]->nCncts();
+		}
+	}
 }
 
 
@@ -687,8 +693,8 @@ double hypreSolver::getFlowRate(HYPRE_IJVector xxx, const Fluid* fluid, double& 
 */
 void hypreSolver::fillMatrixHypre(HYPRE_IJMatrix AAA, HYPRE_IJVector bbb, HYPRE_IJVector xxx, double inletPrs, double outletPrs, const Fluid& fluid, bool writeVelocity)  {
 	int nnz;
-	double values[1000];
-	int cols[1000];
+	std::vector<double> values(max_connections_ + 1);
+	std::vector<int> cols(max_connections_ + 1);
 	fluidf ff = fluid.ff();
 
 	int row(0);
@@ -757,8 +763,7 @@ void hypreSolver::fillMatrixHypre(HYPRE_IJMatrix AAA, HYPRE_IJVector bbb, HYPRE_
 
 						rhs += conductance * localOutletPrs;
 					}
-					else                                                        // Interior point
-					{
+					else if (poreiRows_[prj->index()] != -1) {                  // Interior point
 						values[nnz]=-conductance;
 						cols[nnz++]=poreiRows_[prj->index()];
 					}
@@ -768,7 +773,7 @@ void hypreSolver::fillMatrixHypre(HYPRE_IJMatrix AAA, HYPRE_IJVector bbb, HYPRE_
 
 
 			if (conductanceSum>1e-165)  {
-				HYPRE_IJMatrixAddToValues(AAA, 1, &nnz, &row, cols, values);
+				HYPRE_IJMatrixAddToValues(AAA, 1, &nnz, &row, cols.data(), values.data());
 
 				HYPRE_IJVectorSetValues(bbb, 1, &row, &rhs);
 

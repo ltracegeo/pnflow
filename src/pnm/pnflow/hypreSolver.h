@@ -80,6 +80,7 @@ private:
 	const vector<Elem*>&                            outPores_;
 	const int                                          nBSs_;
 	const int                                          nBpPors_;
+	int max_connections_;
 
 
 

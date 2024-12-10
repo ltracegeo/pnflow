@@ -29,11 +29,7 @@ std::vector<double> GenerateContactAngles(const GNMData& comn, const Weibul1& wb
       con_angles[i] = comn.weibul1(wb_1);
     }
   }
-  if (wb_2) {
-	writeVectorToFile(con_angles, "con_angles_final.csv", "Contact angle");
-    writeVectorToFile(con_angles_wb1, "con_angles_wb1.csv", "Contact angle");
-    writeVectorToFile(con_angles_wb2, "con_angles_wb2.csv", "Contact angle");
-  }
+
   sort(con_angles.begin(), con_angles.end(), greater<double>());
   return con_angles;
 }
@@ -253,7 +249,19 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 		for(size_t i= nBpPors; i < elemans.size(); ++i)
 			if(auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel())) if(elem->exists(OIL))  trots2Set.push_back(elem);
 
-		setContactAngles(pores2Set, trots2Set, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn);
+		std::optional<Weibul1> scndWbContAngDist;
+		double scndDistFraction = 0.0;
+		if (inp.giv("FRAC_CON_ANG", data, 0))
+		{
+			char volBase('x');
+			scndWbContAngDist = std::make_optional<Weibul1>();
+			data >> scndDistFraction >> volBase >> *scndWbContAngDist;
+			(*scndWbContAngDist).minV *= acos(-1.)/180.;
+			(*scndWbContAngDist).scale(acos(-1.)/180.);
+		}
+
+		setContactAngles(pores2Set, trots2Set, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn,
+		                 scndWbContAngDist, scndDistFraction);
 
 	}
 
@@ -327,7 +335,7 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 		vector<VoidElem*> poresToSeed;poresToSeed.reserve(nBpPors);
 	   {
 			for(int i= 2; i < nBpPors; ++i)
-				if (auto elem=dynamic_cast<VoidElem*>(elemans[i]))  if(elem->exists(OIL))  poresToSeed.push_back(elem);
+				if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel()))  if(elem->exists(OIL))  poresToSeed.push_back(elem);
 
 			vector<int> clustDiams(poresToSeed.size());
 			for(size_t i= 0; i<clustDiams.size(); ++i)
@@ -342,7 +350,7 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 
 
 	   }
-		vector<VoidElem*> pores2BAltered; poresToSeed.reserve(poresToSeed.size());
+		vector<VoidElem*> pores2BAltered; pores2BAltered.reserve(poresToSeed.size());
 		vector<VoidElem*> trots2BAltered; trots2BAltered.reserve(poresToSeed.size()*3);
 
 
@@ -513,7 +521,8 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 				<< "too low oil invaded fraction: " << oilInvadedVol/TotalVol             << endl
 				<< "=================================================================\n"      << endl;
 
-		setContactAngles(pores2BAltered, trots2BAltered, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn);
+		setContactAngles(pores2BAltered, trots2BAltered, wbCA, CAMdl, CAMdl2SepAng, nBpPors, comn,
+		                 std::nullopt, 0.0);
 
 	}
 	else if (inp.giv("FRAC_CONT_ANG",data))
@@ -532,16 +541,29 @@ void applyFWettabilityChange(const InputFile& inp, const vector<Elem*>& elemans,
 	}
 }
 
+void WriteCasToFiles(const vector<Elem*> &elemans, const std::string &cas_output_name) {
+	std::vector<double> adv_con_angles;
+	std::vector<double> rec_con_angles;
+	adv_con_angles.reserve(elemans.size() - 2);
+	rec_con_angles.reserve(elemans.size() - 2);
+	for(int i = 2; i < elemans.size(); ++i) {
+		if (auto elem=dynamic_cast<VoidElem*>(elemans[i]->ChModel())) {
+			adv_con_angles.push_back(elem->conAngleAdv());
+			rec_con_angles.push_back(elem->conAngleRec());
+		}
+	}
+	writeVectorToFile(adv_con_angles, cas_output_name + "_adv_con_angles.csv", "Contact angle");
+	writeVectorToFile(rec_con_angles, cas_output_name + "_rec_con_angles.csv", "Contact angle");
+}
 
 void setElemProps(const InputFile& inp, const vector<Elem*>& elemans, size_t nBpPors, mstream& out_, const GNMData& comn)
 {
 	Random::Init(inp.getOr("RAND_SEED", (unsigned)time(nullptr)));
-	if (comn.dispCycle()==1)
+	if (comn.dispCycle()==1) {
 		applyInitWettability(inp, elemans, nBpPors, out_, comn);
-	else if (comn.dispCycle()==2)
+		WriteCasToFiles(elemans, "initial");
+	} else if (comn.dispCycle()==2) {
 		applyFWettabilityChange(inp, elemans, nBpPors, out_, comn);
+		WriteCasToFiles(elemans, "equilibrium");
+	}
 }
-
-
-
-
