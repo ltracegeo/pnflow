@@ -1,5 +1,7 @@
 FROM slicer/slicer-base:latest
 
+# Update yum repository due to CentOS 7 EOL
+COPY ./CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
 
 RUN yum -y update && \
     yum -y install make automake gcc gcc-c++ gcc7 cmake cmake3 epel-release && \
