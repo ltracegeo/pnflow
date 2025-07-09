@@ -1,4 +1,4 @@
-name: make and test
+name: Make and Test
 
 on:
   push:
@@ -8,20 +8,21 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Safer than using ubuntu-latest for now
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Cache lib
-      uses: actions/cache@v2
+    - name: Cache library directory
+      uses: actions/cache@v3
       with:
         path: |
           ~/lib
         key: ${{ runner.os }}-lib
 
-    - name: make
+    - name: Build with Make
       run: make -j
-    - name: test
+
+    - name: Run Tests
       run: make test
