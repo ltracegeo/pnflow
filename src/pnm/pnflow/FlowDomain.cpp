@@ -165,7 +165,7 @@ FlowDomain::FlowDomain(InputFile & input)
 			if(elm->isOnOutletSlvrBdr()) krOutletBoundary_.push_back(elm);
 			elm->sortConnectingElems_DistToExit();
 			if(elm->isInCalcBox()) {
-				flowVolume_ += elm->flowVolume();
+				flowVolume_ += elm->flowVolume() * elm->subscaleFactor();
 				clayVolume_ += elm->clayVolume();
 			}
 		} 

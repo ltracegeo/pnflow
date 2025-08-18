@@ -146,8 +146,9 @@ std::string string_output;
 
 extern "C" {
 
-const char* pnflow(const char *config, const char *link1, const char *link2, const char *node1,
-                   const char *node2) {
+const char* pnflow(const char *config,
+	               const char *link1, const char *link2, const char *link3,
+                   const char *node1, const char *node2, const char *node3) {
 	bool enable_debug = false;
 	psprc::SetDebug(enable_debug);
 	CornerApex::SetDebug(enable_debug);
@@ -160,8 +161,10 @@ const char* pnflow(const char *config, const char *link1, const char *link2, con
 	std::string network_name = input_parser.GetNetworkName();
 	VirtualFilesManager::Write(network_name + "_link1.dat", link1);
 	VirtualFilesManager::Write(network_name + "_link2.dat", link2);
+	VirtualFilesManager::Write(network_name + "_link3.dat", link3);
 	VirtualFilesManager::Write(network_name + "_node1.dat", node1);
 	VirtualFilesManager::Write(network_name + "_node2.dat", node2);
+	VirtualFilesManager::Write(network_name + "_node3.dat", node3);
 	std::istringstream file_content_stream(config);
 	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
 	inFile.setTitle();

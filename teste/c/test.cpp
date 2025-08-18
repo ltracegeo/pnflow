@@ -18,10 +18,14 @@ int main() {
     std::string config = ReadFile("input.txt");
     std::string link1 = ReadFile("Image_link1.dat");
     std::string link2 = ReadFile("Image_link2.dat");
+    std::string link3 = ReadFile("Image_link3.dat");
     std::string node1 = ReadFile("Image_node1.dat");
     std::string node2 = ReadFile("Image_node2.dat");
+    std::string node3 = ReadFile("Image_node3.dat");
 
-    std::string result = pnflow(config.c_str(), link1.c_str(), link2.c_str(), node1.c_str(), node2.c_str());
+    std::string result = pnflow(config.c_str(),
+                                link1.c_str(), link2.c_str(), link3.c_str(),
+                                node1.c_str(), node2.c_str(), node3.c_str());
     std::cout << "RESULT: " << result << std::endl;
     return 0;
 }

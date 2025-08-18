@@ -61,10 +61,10 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 		for(int iT = 0; iT < nTrots_; ++iT)  {
 
 			int pore1Idx, pore2Idx;
-			double radius, shapeFactor, lenTot, lenPore1, lenPore2, lenThroat, vol, clayVolume;
+			double radius, shapeFactor, lenTot, lenPore1, lenPore2, lenThroat, vol, clayVolume, subscaleFactor;
 
 			input.throatData(iT+1, pore1Idx, pore2Idx, vol, clayVolume, radius, shapeFactor,
-				lenPore1, lenPore2, lenThroat, lenTot);
+				lenPore1, lenPore2, lenThroat, lenTot, subscaleFactor);
 
 
 			///. allow initializing pores/throats with zero-length/vol
@@ -92,6 +92,7 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 
 
 				Elem *throat = new Throat(comn_, neoNPors+1+neoNTrots, dbl3(0.,0.,0.), radius, vol, clayVolume, shapeFactor, lenThroat, lenPore1, lenPore2,0);
+				throat->setSubscaleFactor(subscaleFactor);
 
 
 				elemans_.push_back(throat);
@@ -140,11 +141,11 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 			for(int iP = 1; iP <= nPors_; ++iP) // WARNING SOURCE OF MISTAKE
 			{
 				int connNumber;
-				double xPos, yPos, zPos, vol, radius, shapeFactor, clayVolume;
+				double xPos, yPos, zPos, vol, radius, shapeFactor, clayVolume, subscaleFactor;
 				vector< int > connThroats, connPores;
 				vector<Elem*> adjTrots;
 
-				input.poreData(iP, xPos, yPos, zPos, connNumber, connThroats, connPores, vol, clayVolume, radius, shapeFactor);
+				input.poreData(iP, xPos, yPos, zPos, connNumber, connThroats, connPores, vol, clayVolume, radius, shapeFactor, subscaleFactor);
 
 				if(xPos >= shaveOff && xPos <= box_.x-shaveOff)  {
 					++neoIndex;
@@ -167,6 +168,7 @@ void FlowDomain::initNetworkOld(InputData& input)  {
 					bool inSlvrBox(nod.x >= box_.x*solverBoxStart_ &&  nod.x <=  box_.x*solverBoxEnd_ && iP>=nBSs_);
 
 					elemans_[neoIndex] = new Pore(comn_, neoIndex, nod, radius, vol, clayVolume, shapeFactor, inSlvrBox, inSlvrBox, initSolvPrs, adjTrots,0);
+					elemans_[neoIndex]->setSubscaleFactor(subscaleFactor);
 				}
 			}
 			if (input_.informative) {

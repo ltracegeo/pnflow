@@ -134,7 +134,7 @@ void Throat::calcR2(const Fluid& fluid)
 
 
 
-		throat->setPoreToPoreCond(fluid.ff(), 1. / flowResistance);
+		throat->setPoreToPoreCond(fluid.ff(), throat->subscaleFactor() / flowResistance);
 
 	}
 	else

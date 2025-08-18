@@ -509,12 +509,17 @@ void InputData::network(int& numPores, int& numThroats, double& xDim, double& yD
 		string porePropFile(netNam + "_node2.dat");          // Open file containing pore geometry data
 		poreProp_.open(porePropFile);
 
+		string poreSubscale_File(netNam + "_node3.dat");     // Open file containing pore subscale data
+		poreSubscale_.open(poreSubscale_File);
+
 		string throatConnFile(netNam + "_link1.dat");        // Open file containing throat connection data
 		throatConn_.open(throatConnFile);
 
 		string throatPropFile(netNam + "_link2.dat");        // Open file containing throat geometry data
 		throatProp_.open(throatPropFile);
 
+		string throatSubscale_File(netNam + "_link3.dat");     // Open file containing throat subscale data
+		throatSubscale_.open(throatSubscale_File);
 
 		poreConn_ >> numPores >> xDim >> yDim >> zDim;
 		throatConn_ >> numThroats;
@@ -599,6 +604,12 @@ void InputData::loadPoreData()  {
 				>> pr->z
 				>> pr->connNum;
 
+			if (poreSubscale_) {
+				int index;
+				poreSubscale_ >> index >> pr->subscaleFactor;
+			} else {
+				pr->subscaleFactor = 1.0;
+			}
 			ensure(idx == pr->index);
 
 			connThroats = new int[pr->connNum];
@@ -626,6 +637,7 @@ void InputData::loadPoreData()  {
 	if(addPeriodicBC_) findBoundaryPores();
 	poreConn_.close();
 	poreProp_.close();
+	poreSubscale_.close();
 }
 
 void InputData::findBoundaryPores()  {
@@ -813,6 +825,15 @@ void InputData::loadThroatData()  {
 				>> tr->volume
 				>> tr->clayVol;
 
+			if (throatSubscale_) {
+				int index;
+				int pore_0;
+				int pore_1;
+				throatSubscale_ >> index >> pore_0 >> pore_1 >> tr->subscaleFactor;
+			} else {
+				tr->subscaleFactor = 1.0;
+			}
+
 			ensure(idx == tr->index);
 		}
 		throatData_[i] = tr;
@@ -821,6 +842,7 @@ void InputData::loadThroatData()  {
 	}
 	throatConn_.close();
 	throatProp_.close();
+	throatSubscale_.close();
 	averageThroatLength_ = lenSumThroat/origNumThroats_;
 	averagePoreHalfLength_ = lenSumPore/origNumThroats_;
 
@@ -939,7 +961,7 @@ int InputData::findClosestPore(const vector< tuple3< PoreStruct*, int*, int* > >
 
 
 void InputData::poreData(int idx, double& xPos, double& yPos, double& zPos, int& connNum, vector< int >& connThroats,
-						 vector< int >& connPores, double& vol, double& volCl, double& rad, double& shapeFact)  {
+						 vector< int >& connPores, double& vol, double& volCl, double& rad, double& shapeFact, double& subscaleFactor)  {
 	int stdIdx(idx), numNetsInFront(0);
 	if(idx > origNumPores_)  {
 		numNetsInFront = (idx-1)/origNumPores_;
@@ -954,6 +976,7 @@ void InputData::poreData(int idx, double& xPos, double& yPos, double& zPos, int&
 	volCl = poreProp->clayVol;
 	rad = poreProp->radius;
 	shapeFact = poreProp->shapeFact;
+	subscaleFactor = poreProp->subscaleFactor;
 	connThroats.resize(connNum);
 	connPores.resize(connNum);
 	bool outletPore(false), inletPore(false);
@@ -1087,7 +1110,7 @@ void InputData::poreData(int idx, double& xPos, double& yPos, double& zPos, int&
 
 
 void InputData::throatData(int idx, int& pore1, int& pore2, double& vol, double& volCl, double& rad, double& shapeFact,
-						   double& lenPore1, double& lenPore2, double& lenThroat, double& lenTot)  {
+						   double& lenPore1, double& lenPore2, double& lenThroat, double& lenTot, double &subscaleFactor)  {
 	int stdIdx(idx), numNetsInFront(0);
 	if(idx > origNumThroats_)  {
 		numNetsInFront = 1+(idx-origNumThroats_-1)/(origNumThroats_-connectionsRemoved_);
@@ -1105,6 +1128,7 @@ void InputData::throatData(int idx, int& pore1, int& pore2, double& vol, double&
 	lenPore2 = throatData_[stdIdx-1]->lenPoreTwo;
 	lenThroat = throatData_[stdIdx-1]->lenThroat;
 	lenTot = throatData_[stdIdx-1]->lenTot;
+	subscaleFactor = throatData_[stdIdx-1]->subscaleFactor;
 
 	if(idx > origNumThroats_)                      // Point to correct pores in the subsequent networks
 	{

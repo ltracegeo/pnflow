@@ -16,6 +16,7 @@ typedef struct
 	double      radius;
 	double      shapeFact;
 	double      clayVol;
+	double      subscaleFactor;
 } PoreStruct;
 
 typedef struct
@@ -31,6 +32,7 @@ typedef struct
 	double  lenTot;
 	double  volume;
 	double  clayVol;
+	double  subscaleFactor;
 } ThroatStruct;
 
 /// A little storage class for three elements
@@ -97,8 +99,8 @@ public:
 	///. non constant public member functions:
 
 	void network(int& numPores, int& numThroats, double& xDim, double& yDim, double& zDim);//. TODO document
-	void poreData(int idx, double& x, double& y, double& z, int& n, stvec< int >& throats, stvec<int>& pores, double& c, double& vcl, double& e, double& g)	;        		//something wierd hapenning, but probably this is a const function;
-	void throatData(int idx, int& p1, int& p2, double& v, double& vcl, double& r, double& g, double& lp1, double& lp2, double& lt, double& lTot); //* similar to poreData
+	void poreData(int idx, double& x, double& y, double& z, int& n, stvec< int >& throats, stvec<int>& pores, double& c, double& vcl, double& e, double& g, double& subscaleFactor)	;        		//something wierd hapenning, but probably this is a const function;
+	void throatData(int idx, int& p1, int& p2, double& v, double& vcl, double& r, double& g, double& lp1, double& lp2, double& lt, double& lTot, double& subscaleFactor); //* similar to poreData
 
 
 private:
@@ -132,8 +134,10 @@ private:
 
 	io::vifstream                                           poreConn_;
 	io::vifstream                                           poreProp_;
+	io::vifstream                                           poreSubscale_;
 	io::vifstream                                           throatConn_;
 	io::vifstream                                           throatProp_;
+	io::vifstream                                           throatSubscale_;
 
 	int                                                     connectionsRemoved_;
 	int                                                     origNumPores_;

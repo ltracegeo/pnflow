@@ -197,6 +197,7 @@ public:
 	double waterSaturation() const {return waterSaturation_;}
 	double flowVolumeX() const {return flowVolume_+clayVolume_;} 
 	double saturation() const  {return waterSaturation_;}
+	double subscaleFactor() const {return subscaleFactor_;}
 
 	Elem* neib(int conn) const {return cnctions_[conn];}
 	const std::vector<Elem*>& connections() const {return cnctions_;}
@@ -258,7 +259,7 @@ public:
 
 	double updateSat_calcR(double cappPrs);
 
-
+	void setSubscaleFactor(double subscaleFactor);
 
 	const dbl3& node() const {return node_;}
 	dbl3& node() {return node_;}
@@ -338,6 +339,7 @@ protected:
 	std::vector<Elem*>       cnctions_;
 	ElemModel*                  model_;
 	double                      waterSaturation_;
+	double                      subscaleFactor_;
 
 	bool                        isInsideSolverBox_;
 	bool                        isInCalcBox_;

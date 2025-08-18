@@ -34,6 +34,7 @@ Elem::Elem(const CommonData& comn, int indx, dbl3 nod, double radius, double vol
 	numOilCentreFeederNeis_(0),
 	numWatCentreFeederNeis_(connNum), index_(indx), node_(nod)  {
 	waterSaturation_ = 1.;
+	subscaleFactor_ = 1.;
 	isInsideSolverBox_ = false;
 	isInCalcBox_ = false;
 	isInWatFloodVec_ = false;
@@ -473,6 +474,9 @@ double Elem::updateSat_calcR(double cappPrs)  {
 	return isInCalcBox_ ? waterSaturation_ * flowVolume_ + clayVolume_ : 0.;
 }
 
+void Elem::setSubscaleFactor(double subscaleFactor) {
+	subscaleFactor_ = subscaleFactor;
+}
 
 /**
 // As an elemnt is drained, its neighbours have an increase in number of elems
