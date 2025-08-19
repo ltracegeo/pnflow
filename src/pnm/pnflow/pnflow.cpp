@@ -161,10 +161,14 @@ const char* pnflow(const char *config,
 	std::string network_name = input_parser.GetNetworkName();
 	VirtualFilesManager::Write(network_name + "_link1.dat", link1);
 	VirtualFilesManager::Write(network_name + "_link2.dat", link2);
-	VirtualFilesManager::Write(network_name + "_link3.dat", link3);
+	if (strlen(link3) > 0) {
+		VirtualFilesManager::Write(network_name + "_link3.dat", link3);
+	}
 	VirtualFilesManager::Write(network_name + "_node1.dat", node1);
 	VirtualFilesManager::Write(network_name + "_node2.dat", node2);
-	VirtualFilesManager::Write(network_name + "_node3.dat", node3);
+	if (strlen(node3) > 0) {
+		VirtualFilesManager::Write(network_name + "_node3.dat", node3);
+	}
 	std::istringstream file_content_stream(config);
 	InputFile inFile(file_content_stream, "input_data", true, enable_debug);
 	inFile.setTitle();

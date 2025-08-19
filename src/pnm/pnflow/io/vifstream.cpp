@@ -34,7 +34,7 @@ void vifstream::close() {
 }
 
 vifstream::operator bool() const {
-    return actual_file_ || VirtualFilesManager::Exists(filename_);
+    return (actual_file_ && actual_file_->is_open()) || VirtualFilesManager::Exists(filename_);
 }
 
 // vifstream& vifstream::operator<<(std::ostream& (*os)(std::ostream&)) {
