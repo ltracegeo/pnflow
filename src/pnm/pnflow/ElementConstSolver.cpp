@@ -60,9 +60,9 @@ void Throat::calcR2(const Fluid& fluid)
 		{
 			double cond1, throatCond, cond2;
 			//double resistivity = fluid.resistivity();
-			cond1 = p1->model()->electricalConductance();
-			throatCond = throat->model()->electricalConductance();
-			cond2 = p2->model()->electricalConductance();
+			cond1 = p1->model()->electricalConductance() * p1->subscaleFactor();
+			throatCond = throat->model()->electricalConductance() * throat->subscaleFactor();
+			cond2 = p2->model()->electricalConductance() * p2->subscaleFactor();
 
 			//cout<<throatCond <<" "<< throatCond <<" "<< cond2 <<" "<<p2->isEntryOrExitRes()<< endl;
 			ensure(cond1 > 0. &&  throatCond > 0. && cond2 > 0.);
@@ -77,9 +77,9 @@ void Throat::calcR2(const Fluid& fluid)
 		{
 			double cond1, throatCond, cond2;
 			ensure(fluid.ff()==WTR);
-			cond1 = p1->model()->getWaterConductance(filmBlob,p1->isEntryOrExitRes());
-			throatCond = throat->model()->getWaterConductance(filmBlob);
-			cond2 = p2->model()->getWaterConductance(filmBlob, p2->isEntryOrExitRes());
+			cond1 = p1->model()->getWaterConductance(filmBlob,p1->isEntryOrExitRes()) * p1->subscaleFactor();
+			throatCond = throat->model()->getWaterConductance(filmBlob) * throat->subscaleFactor();
+			cond2 = p2->model()->getWaterConductance(filmBlob, p2->isEntryOrExitRes()) * p2->subscaleFactor();
 			ensure(cond1*throatCond*cond2 != 0.);
 
 			if(cond1*throatCond*cond2 > 0.)
@@ -102,9 +102,9 @@ void Throat::calcR2(const Fluid& fluid)
 		else
 		{
 			double cond1, throatCond, cond2;
-			cond1 = p1->model()->getConductance(fluid,p1->isEntryOrExitRes());
-			throatCond = throat->model()->getConductance(fluid);
-			cond2 = p2->model()->getConductance(fluid, p2->isEntryOrExitRes());
+			cond1 = p1->model()->getConductance(fluid,p1->isEntryOrExitRes()) * p1->subscaleFactor();
+			throatCond = throat->model()->getConductance(fluid) * throat->subscaleFactor();
+			cond2 = p2->model()->getConductance(fluid, p2->isEntryOrExitRes()) * p2->subscaleFactor();
 
 
 
@@ -134,7 +134,7 @@ void Throat::calcR2(const Fluid& fluid)
 
 
 
-		throat->setPoreToPoreCond(fluid.ff(), throat->subscaleFactor() / flowResistance);
+		throat->setPoreToPoreCond(fluid.ff(), 1. / flowResistance);
 
 	}
 	else

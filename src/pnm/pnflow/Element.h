@@ -339,7 +339,7 @@ protected:
 	std::vector<Elem*>       cnctions_;
 	ElemModel*                  model_;
 	double                      waterSaturation_;
-	double                      subscaleFactor_;
+	double                      subscaleFactor_;  // number of subresolution capillaries
 
 	bool                        isInsideSolverBox_;
 	bool                        isInCalcBox_;
