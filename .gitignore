@@ -19,7 +19,7 @@ log.*
 **/Make/linux*/
 pkgs/**/bin/
 pkgs/hypre/src/hypre/
-
+python/build
 
 # Latex
 *.aux
